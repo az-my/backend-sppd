@@ -1,0 +1,97 @@
+// BACKEND_sppd_report.js
+const express = require('express');
+const { getSheetData } = require('./BACKEND_service_gsheets');
+const { sortDataByPriority, getStatusDriver, getMonthNames } = require('./BACKEND_utils_check');
+const { Parser } = require('json2csv');
+
+const router = express.Router();
+const SHEET_NAME = 'database_sppd';
+
+/**
+ * ✅ Generate Report (Reusable for All Report Types)
+ * @param {string} reportType - "rekap-kantor", "rekap-pln", "lembar-satuan"
+ */
+const generateReport = async (reportType, req, res) => {
+    try {
+        const data = await getSheetData(SHEET_NAME);
+        const header = data[0]; // Raw header columns
+        const rows = data.slice(1); // Raw data excluding header
+
+        // ✅ Apply consistent sorting logic
+        let sortedData = sortDataByPriority(rows, header);
+
+        // ✅ Add computed columns to each row (keeps all raw data intact)
+        sortedData = sortedData.map((row) => {
+            const { bulanTransaksi, bulanMasukTagihan } = getMonthNames(row[header.indexOf('TANGGAL_MULAI')]);
+            const namaDriver = row[header.indexOf('NAMA_DRIVER')];
+            return [
+                ...row, // Preserve all raw columns
+                bulanTransaksi, // New calculated column
+                bulanMasukTagihan, // New calculated column
+                getStatusDriver(namaDriver) // New calculated column
+            ];
+        });
+
+        // ✅ Append new headers for calculated columns
+        const updatedHeader = [...header, "BULAN_TRANSAKSI", "BULAN_MASUK_TAGIHAN", "STATUS_DRIVER"];
+
+        // ✅ Special Logic for Rekap Kantor (Group by NAMA_DRIVER)
+        let formattedData;
+        if (reportType === 'rekap-kantor') {
+            const groupedData = {};
+            sortedData.forEach(row => {
+                const driver = row[header.indexOf('NAMA_DRIVER')];
+                const biayaSPPD = parseFloat(row[header.indexOf('TOTAL_BIAYA_SPPD')]?.replace(/\./g, '').replace(',', '.')) || 0;
+                if (!groupedData[driver]) {
+                    groupedData[driver] = {
+                        NAMA_DRIVER: driver,
+                        JUMLAH_TRANSAKSI: 0,
+                        TOTAL_BIAYA_SPPD: 0,
+                        RECORDS: []
+                    };
+                }
+                groupedData[driver].JUMLAH_TRANSAKSI += 1;
+                groupedData[driver].TOTAL_BIAYA_SPPD += biayaSPPD;
+                groupedData[driver].RECORDS.push(row);
+            });
+
+            // ✅ Convert the grouped data into array format for CSV export
+            formattedData = Object.values(groupedData).map(group => ({
+                ...group,
+                TOTAL_BIAYA_SPPD: group.TOTAL_BIAYA_SPPD.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
+            }));
+        } else {
+            // ✅ Standard format for other reports
+            formattedData = sortedData;
+        }
+
+        // ✅ CSV Export Handling
+        if (req.query.format?.toLowerCase() === 'csv') {
+            const csvParser = new Parser({ fields: updatedHeader });
+            const csvData = csvParser.parse(formattedData);
+            res.header('Content-Type', 'text/csv');
+            res.attachment(`${reportType}_report.csv`);
+            return res.send(csvData);
+        }
+
+        // ✅ JSON Response
+        res.json({
+            message: `✅ Successfully generated ${reportType} report`,
+            total_records: formattedData.length,
+            header: updatedHeader,
+            data: formattedData
+        });
+
+    } catch (error) {
+        console.error(`❌ Error generating ${reportType} report:`, error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// ✅ Define Routes for Each Report Type Using the Centralized Function
+router.get('/report/rekap-kantor', (req, res) => generateReport('rekap-kantor', req, res));
+router.get('/report/rekap-pln', (req, res) => generateReport('rekap-pln', req, res));
+router.get('/report/lembar-satuan', (req, res) => generateReport('lembar-satuan', req, res));
+router.get('/report/sppd-sorted-grouped', (req, res) => generateReport('sppd-sorted-grouped', req, res));
+
+module.exports = router;
