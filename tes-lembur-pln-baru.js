@@ -1,117 +1,129 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan LEMBUR PLN</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.4/dist/full.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
-        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer"></script>
-</head>
-<body class="bg-white-100 flex flex-col justify-center items-center min-h-screen p-6">
+// 📁 tes-lembur-pln-baru.js
+
+// 🌐 API Endpoint
+const API_URL = "https://backend-sppd-production.up.railway.app/api/lembur/report/rekap-pln";
+
+// 🌍 Global variable to store fetched data
+let globalData = [];
+
+/**
+ * ✅ Format Number with Indonesian Thousand Separator (Proper Parsing)
+ * @param {string|number} num - Raw number string from API response
+ * @returns {string} - Formatted number with correct thousands separator
+ */
+const formatRupiah = (num) => {
+    if (!num) return "0"; // Handle empty or undefined values
+
+    // Convert to string for safe manipulation
+    let numStr = String(num);
+
+    // 🟢 Step 1: Remove decimal part (e.g., `354.496,00` → `354.496`)
+    numStr = numStr.split(",")[0];
+
+    // 🟢 Step 2: Ensure correct thousand separator remains (`.`)
+    return numStr.replace(/,/g, "").trim(); // Ensure clean output
+};
 
 
 
-    <!-- Centered Table -->
-    <div id="laporan-wrapper" class="overflow-x-auto w-auto text-center">
-        <table id="laporan" class="w-auto text-xs align-middle break-words ">
-            <!-- Table Title -->
-            <thead>
-                <tr>
-                    <th colspan="11" class="text-center">
-                        <div class="pl-8 font-semibold text-sm mt-1">
-                            <br>REKAPITULASI KERJA LEMBUR OUTSOURCING <br />
-                            UPT BANDA ACEH <br><span id="transaction-month" class="uppercase"></span><br>
-                        </div>
-                    </th>
-                </tr>
-                <!-- Column Headers -->
-                <tr>
-                    <th class="border border-gray-800 px-2 py-1 text-center uppercase">No</th>
-                    <th class="border border-gray-800 px-2 py-1 text-center uppercase">Hari</th>
-                    <th class="border border-gray-800 px-2 py-1 text-center uppercase">Tanggal</th>
-                    <th class="border border-gray-800 px-2 py-1 text-center uppercase">Nama Outsourcing</th>
-                    <th class="border border-gray-800 px-2 py-1 text-center uppercase">Unit</th>
-                    <th class="border border-gray-800 px-2 py-1 text-center break-words uppercase">Rincian Pekerjaan</th>
-                    <th class="border border-gray-800 px-2 py-1 text-center uppercase">Jam Mulai</th>
-                    <th class="border border-gray-800 px-2 py-1 text-center uppercase">Jam Selesai</th>
-                    <th class="border border-gray-800 px-2 py-1 text-center uppercase">Total Jam<br>Lembur</th>
-                    <th class="border border-gray-800 px-2 py-1 text-center w-auto uppercase  ">Total Jam Yang<br>Dibayarkan</th>
-                    <th class="border border-gray-800 px-2 py-1 text-center uppercase">Upah<br>Lembur<br>SeJam</th>
-                    <th class="border border-gray-800 px-2 py-1 text-center uppercase">Biaya Yang<br>Dibayarkan</th>
-                    <th class="border border-gray-800 px-2 py-1 text-center uppercase">Ket</th>
-                </tr>
-                <tr ><th colspan="11" class="border border-gray-800 pl-8 py-1 text-center align-middle uppercase"><span id="transaction-month"></span></th></tr>
-            </thead>
-            <tbody id="data-table-body">
-                <!-- Dynamic data will be rendered here -->
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="11" class="border border-gray-800 px-2 py-1 font-semibold text-right uppercase ">Lembur <span id="transaction-month"></span></td>
-                    <td class="border border-gray-800 px-2 py-1 text-right" id="total-amount"></td>
-                    <td class="border border-gray-800 px-2 py-1 text-right" id="total-amount"></td>
-                </tr>
-                <tr>
-                    <td colspan="11" class="border border-gray-800 px-2 py-1 font-semibold text-right uppercase">Biaya Admin (5%)</td>
-                    <td class="border border-gray-800 px-2 py-1 text-right" id="total-biaya-admin"></td>
-                    <td class="border border-gray-800 px-2 py-1 text-right" id="total-biaya-admin"></td>
-                </tr>
-                <tr>
-                    <td colspan="11" class="border border-gray-800 px-2 py-1 font-semibold text-right uppercase">Total Lembur <span id="transaction-month"></span></td>
-                    <td class="border border-gray-800 px-2 py-1 text-right" id="total-invoice-without-tax"></td>
-                    <td class="border border-gray-800 px-2 py-1 text-right" id="total-invoice-without-tax"></td>
-                </tr>
-                <tr>
-                    <td colspan="11" class="border border-gray-800 px-2 py-1 font-semibold text-right uppercase text-white">a</td>
-                    <td class="border border-gray-800 px-2 py-1 text-right" id=""></td>
-                    <td colspan="11" class="border border-gray-800 px-2 py-1 font-semibold text-right uppercase text-white">a</td>
-                </tr>
-                <tr>
-                    <td colspan="11" class="border border-gray-800 px-2 py-1 font-semibold text-right uppercase">Total Tagihan Lembur <span id="transaction-month"></span></td>
-                    <td class="border border-gray-800 px-2 py-1 text-right" id="total-tagihan-without-tax"></td>
-                    <td class="border border-gray-800 px-2 py-1 text-right" id="total-tagihan-without-tax"></td>
-                </tr>
-                <tr>
-                    <td colspan="11" class="border border-gray-800 px-2 py-1 font-semibold text-right">PPN (11%)</td>
-                    <td class="border border-gray-800 px-2 py-1 text-right" id="total-ppn"></td>
-                    <td class="border border-gray-800 px-2 py-1 text-right" id="total-ppn"></td>
-                </tr>
-                <tr>
-                    <td colspan="11" class="border border-gray-800 px-2 py-1 font-semibold text-right uppercase">Total Tagihan Lembur <span id="transaction-month"></span>+ PPN</td>
-                    <td class="border border-gray-800 px-2 py-1 text-right" id="total-final-invoice"></td>
-                    <td class="border border-gray-800 px-2 py-1 text-right" id="total-final-invoice"></td>
-                </tr>
-                <tr>
-                    <td colspan="13" class="italic border border-gray-800 px-2 py-1 font-semibold text-left" id="terbilang">
-                        <span>Terbilang: </span>
-                    </td>
-                    
-                </tr>
-                
-                <!-- Signature Section Restored -->
-                <tr>
-                    <td colspan="4" class="border-t border-gray-800 px-2 py-8 text-center align-bottom">
-                        
-                        <br>KSO PT. PALMA NAFINDO PRATAMA - PT. SANOBAR GUNAJAYA<br>LEADER KSO<br><br><br><br><br><br><br><u>RIZKY NAHARDI</u>
-                    </td>
-                    <td colspan="6"></td>
 
-                    <td colspan="3" class="border-t border-gray-800 px-2 py-8 text-center align-bottom">
-                        Banda Aceh, 15 <span id="bulan-masuk-tagihan"></span><br>PT PLN (PERSERO) UPT BANDA ACEH		
-                        <br>MANAGER<br><br><br><br><br><br><br><u>INDRA KURNIAWAN</u>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
 
-    <!-- External JavaScript restored -->
-    <script src="lembur-frontend-report-pln.js"></script>
+/**
+ * ✅ Fetch Data from API and Store in Global Variable
+ */
+const fetchData = async () => {
+    try {
+        console.log("🟢 Fetching rekap-pln report...");
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error(`🚨 API Error: ${response.status} ${response.statusText}`);
 
-</body>
-</html>
+        const data = await response.json();
+
+        // 🟢 Log the FULL API response, including headers and summary
+        console.log("✅ Full API Response:", data);
+
+        globalData = data; // Store the full response without slicing
+
+    } catch (error) {
+        console.error("💀 Fetch failed:", error.message);
+        globalData = {}; // Reset global data in case of failure
+    }
+};
+
+
+/**
+ * ✅ Render Data into Table
+ */
+const renderTable = () => {
+    const $tbody = $("#data-table-body"); // Ensure correct table body ID
+    $tbody.empty();
+
+    // ✅ Check if globalData.data exists and is an array
+    if (!globalData.data || !Array.isArray(globalData.data) || globalData.data.length === 0) {
+        $tbody.html(`
+            <tr class="border border-gray-800">
+                <td colspan="13" class="text-center text-red-500 py-4">⚠️ No data available</td>
+            </tr>
+        `);
+        return;
+    }
+
+    
+    // ✅ Extract transaction-month and bulan-masuk-tagihan once (from the first record)
+    const firstRecord = globalData.data[0];
+    if (firstRecord) {
+        $("#transaction-month").text(firstRecord[24] || "-"); // ✅ Set transaction-month
+        
+        const todayDay = dayjs().format("DD"); // ✅ Get only the day (e.g., "15")
+        $("#bulan-masuk-tagihan").text(`${todayDay} ${firstRecord[25] || "-"}`); // ✅ Set bulan-masuk-tagihan with day + month/year from firstRecord[25]
+    }
+
+    // ✅ Iterate over `globalData.data` instead of `globalData`
+    globalData.data.forEach((row, index) => {
+        const biayaDibayarkan = formatRupiah(row[18]); // Apply fixed formatting
+        const ketValue = row[13] === "HL" ? "HL" : ""; // ✅ Use column 13, show "HL" if HL, otherwise empty
+
+        const htmlRow = `
+            <tr class="border border-gray-800 text-xs">
+                <td class="border border-gray-800 px-2 py-1 text-center">${index + 1}</td> <!-- No -->
+                <td class="border border-gray-800 px-2 py-1 text-center">${row[8] || '-'}</td> <!-- Hari -->
+                <td class="border border-gray-800 px-2 py-1 text-center">${row[7] || '-'}</td> <!-- Tanggal -->
+                <td class="border border-gray-800 px-2 py-1 text-center">${row[2] || '-'}</td> <!-- Nama Outsourcing -->
+                <td class="border border-gray-800 px-2 py-1 text-center">${row[4] || '-'}</td> <!-- Unit -->
+                <td class="border border-gray-800 px-2 py-1 text-center">${row[6] || '-'}</td> <!-- Rincian Pekerjaan -->
+                <td class="border border-gray-800 px-2 py-1 text-center">${row[10] || '-'}</td> <!-- Jam Mulai -->
+                <td class="border border-gray-800 px-2 py-1 text-center">${row[14] || '-'}</td> <!-- Jam Selesai -->
+                <td class="border border-gray-800 px-2 py-1 text-center">${row[15] || '0'} Jam</td> <!-- Total Jam Lembur -->
+                <td class="border border-gray-800 px-2 py-1 text-center">${row[16] || '0'} Jam</td> <!-- Total Jam Dibayarkan -->
+                <td class="border border-gray-800 px-2 py-1 text-center">${row[17] || '0'}</td> <!-- Upah Lembur -->
+                <td class="border border-gray-800 px-2 py-1 text-right">${biayaDibayarkan}</td> <!-- Biaya Dibayarkan -->
+                <td class="border border-gray-800 px-2 py-1 text-center">${ketValue}</td> <!-- Ket -->
+            </tr>
+        `;
+        $tbody.append(htmlRow);
+    });
+
+
+$("#total-amount").text(formatRupiah(globalData.summary.TOTAL_BIAYA_SPPD || 0));
+$("#total-biaya-admin").text(formatRupiah(globalData.summary.ADMIN_FEE || 0));
+$("#total-invoice-without-tax").text(formatRupiah(globalData.summary.TOTAL_TAGIHAN_WITH_ADMIN || 0));
+$("#total-tagihan-without-tax").text(formatRupiah(globalData.summary.TOTAL_TAGIHAN_WITH_ADMIN || 0)); // Render same value
+$("#total-ppn").text(formatRupiah(globalData.summary.TAX || 0));
+$("#total-final-invoice").text(formatRupiah(globalData.summary.TOTAL_TAGIHAN_WITH_TAX || 0));
+
+// ✅ Normalize number: Remove Indonesian thousand separators (.) before converting to terbilang
+const rawFinalInvoice = String(globalData.summary.TOTAL_TAGIHAN_WITH_TAX || "0").replace(/\./g, ""); // Remove all dots
+const numericFinalInvoice = parseInt(rawFinalInvoice, 10); // Convert to integer
+
+// ✅ Convert to terbilang and render
+// ✅ Convert to terbilang and render with "Terbilang:" prefix
+$("#terbilang").text(`Terbilang: ${angkaTerbilang(numericFinalInvoice)}`);
+};
+
+/**
+ * ✅ Initialize: Fetch Data First, Then Render UI
+ */
+$(document).ready(async () => {
+    await fetchData(); // Fetch data and store globally
+    renderTable(); // Render table after data is fetched
+});
