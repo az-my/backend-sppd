@@ -1,0 +1,35 @@
+# 🔹 Node.js dependencies (should not be pushed)
+node_modules/
+package-lock.json
+yarn.lock
+
+# 🔹 Logs
+logs/
+*.log
+
+# 🔹 Environment Variables (Sensitive Data)
+.env
+.env.example
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+
+# 🔹 OS-specific files
+.DS_Store
+Thumbs.db
+
+# 🔹 Debugging & Cache Files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 🔹 Coverage & Build
+coverage/
+dist/
+build/
