@@ -2,29 +2,20 @@
 // 🔥 Google Sheets Service for Handling Data Operations
 
 const { google } = require('googleapis');
-const { readFileSync } = require('fs');
 const logger = require('./BACKEND_utils_logger'); // Import the logger
 
 /**
  * ✅ Authenticate and return the Google Sheets Client with Error Logging
  */
 const getGSheetsClient = () => {
-    const keyPath = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_PATH;
-    
-    if (!keyPath) {
-        logger.error('⚠️ Missing GOOGLE_SERVICE_ACCOUNT_KEY_PATH in .env file.');
-        throw new Error('⚠️ Missing GOOGLE_SERVICE_ACCOUNT_KEY_PATH in .env file.');
-    }
-
     let creds;
     try {
-        creds = JSON.parse(readFileSync(keyPath));
+        creds = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
+        if (creds.private_key) creds.private_key = creds.private_key.replace(/\\n/g, '\n');
     } catch (error) {
-        logger.error(`❌ Failed to load service account key file: ${error.message}`);
-        throw new Error(`❌ Failed to load service account key file: ${error.message}`);
+        logger.error(`❌ Failed to load Google Service Account credentials: ${error.message}`);
+        throw new Error(`❌ Failed to load Google Service Account credentials: ${error.message}`);
     }
-
-    if (creds.private_key) creds.private_key = creds.private_key.replace(/\\n/g, '\n');
 
     const auth = new google.auth.GoogleAuth({
         credentials: creds,
