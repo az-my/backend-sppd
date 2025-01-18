@@ -14,13 +14,17 @@ const SHEET_NAME = 'UJICOBA_SPPD';
  * ✅ Create SPPD Entry with Custom Logic:
  * - If the ID exists, adjust the date by +1 day and create a new entry.
  */
+
+
+const dayjs = require('dayjs');
+
 router.post('/create', async (req, res) => {
     try {
         const newData = req.body;
 
-        // ✅ Generate UUID and standardize TANGGAL_INPUT (YYYY-MM-DD)
+        // ✅ Generate UUID and keep TANGGAL_INPUT in default format
         newData.UUID = uuidv4();
-        newData.TANGGAL_INPUT = new Date().toISOString().split('T')[0]; // Standard format
+        newData.TANGGAL_INPUT = new Date().toISOString().split('T')[0]; // ✅ Keep default YYYY-MM-DD
 
         // ✅ Validate Data Structure
         checkSppdData(newData);
@@ -33,37 +37,27 @@ router.post('/create', async (req, res) => {
         const namaDriverIndex = header.indexOf('NAMA_DRIVER');
         const tanggalSelesaiIndex = header.indexOf('TANGGAL_SELESAI');
 
-        let tanggalMulai = new Date(newData.TANGGAL_MULAI); // ✅ Convert incoming date safely
+        // ✅ Keep incoming TANGGAL_MULAI as YYYY-MM-DD
+        let tanggalMulai = dayjs(newData.TANGGAL_MULAI); // Keep as default format
 
         // ✅ Check for overlapping `TANGGAL_MULAI` for the same driver
         for (const row of rows) {
             const existingDriver = row[namaDriverIndex];
-            const existingTanggalSelesai = row[tanggalSelesaiIndex]
-                ? new Date(row[tanggalSelesaiIndex]) // ✅ Convert string to Date safely
-                : null;
+
+            // ✅ No conversion needed, use as saved in Google Sheets
+            const existingTanggalSelesai = row[tanggalSelesaiIndex] ? dayjs(row[tanggalSelesaiIndex]) : null;
 
             if (
                 existingDriver === newData.NAMA_DRIVER && // ✅ Match Driver
-                existingTanggalSelesai && // ✅ Ensure TANGGAL_SELESAI exists
-                tanggalMulai <= existingTanggalSelesai // ✅ Overlap detected
+                existingTanggalSelesai && // ✅ Ensure valid date exists
+                (tanggalMulai.isBefore(existingTanggalSelesai) || tanggalMulai.isSame(existingTanggalSelesai)) // ✅ Overlap check
             ) {
-                tanggalMulai.setDate(existingTanggalSelesai.getDate() + 1); // ✅ Adjust +1 day
-                newData.TANGGAL_MULAI = tanggalMulai.toISOString().split('T')[0]; // ✅ Keep YYYY-MM-DD format
+                tanggalMulai = existingTanggalSelesai.add(1, 'day'); // ✅ Adjust +1 day
+                newData.TANGGAL_MULAI = tanggalMulai.format('YYYY-MM-DD'); // ✅ Keep as is
             }
         }
 
-
-
-        const dayjs = require('dayjs'); // ✅ Import Day.js
-
-        const formatDateForGoogleSheets = (dateStr) => {
-            if (!dateStr) return "";
-            const [year, month, day] = dateStr.split('-'); // Convert YYYY-MM-DD to DD/MM/YYYY
-            return `${day}/${month}/${year}`; // ✅ No apostrophe, no formula, just pure date
-        };
-
-
-        // ✅ Prepare Data in Correct Order
+        // ✅ Prepare Data in Correct Order (No Formatting)
         const orderedData = [
             newData.UUID,
             newData.TANGGAL_INPUT,
@@ -76,8 +70,8 @@ router.post('/create', async (req, res) => {
             newData.KOTA_TUJUAN,
             newData.ALAT_ANGKUTAN,
             newData.MAKSUD_PERJALANAN,
-            formatDateForGoogleSheets(newData.TANGGAL_MULAI),  // ✅ Convert before saving
-            formatDateForGoogleSheets(newData.TANGGAL_SELESAI), // ✅ Convert before saving
+            newData.TANGGAL_MULAI, // ✅ Keep as YYYY-MM-DD
+            newData.TANGGAL_SELESAI, // ✅ Keep as YYYY-MM-DD
             newData.HOTEL_STATUS,
             newData.DURASI_TRIP,
             newData.DURASI_INAP,
@@ -101,6 +95,9 @@ router.post('/create', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+
+
 
 
 
