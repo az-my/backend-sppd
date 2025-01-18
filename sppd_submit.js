@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (response.ok) {
                 alert("✅ Data successfully submitted!");
                 sppdForm.reset(); // ✅ Clear form after submission
+                location.reload(); // ✅ Reload the page
             } else {
                 alert("❌ Submission failed: " + result.message);
             }

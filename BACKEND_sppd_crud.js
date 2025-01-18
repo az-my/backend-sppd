@@ -23,8 +23,8 @@ router.post('/create', async (req, res) => {
         const newData = req.body;
 
         // ✅ Generate UUID and keep TANGGAL_INPUT in default format
-        newData.UUID = uuidv4();
-        newData.TANGGAL_INPUT = new Date().toISOString().split('T')[0]; // ✅ Keep default YYYY-MM-DD
+        newData.UUID = uuidv4().replace(/-/g, "").substring(0, 4);
+         newData.TANGGAL_INPUT = dayjs().format("YYYY-MM-DD HH:mm:ss"); // Full datetime stamp
 
         // ✅ Validate Data Structure
         checkSppdData(newData);

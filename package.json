@@ -8,6 +8,7 @@
     "express": "^4.21.2",
     "googleapis": "^144.0.0",
     "json2csv": "^6.0.0-alpha.2",
+    "nanoid": "^5.0.9",
     "uuid": "^11.0.3",
     "winston": "^3.17.0"
   },
