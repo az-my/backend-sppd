@@ -85,12 +85,24 @@ const sortDataByPriority = (data, header) => {
 };
 const checkSppdData = (data) => {
     const requiredFields = [
-        'NAMA_DRIVER', 'ASAL', 'UNIT', 'PEMBERI_TUGAS',
-        'TUJUAN', 'ALAT_ANGKUTAN', 'MAKSUD_PERJALANAN',
-        'TANGGAL_MULAI', 'TANGGAL_SELESAI', 'DURASI',
-        'HOTEL', 'BUDGET_BIAYA_HARIAN', 'BUDGET_HOTEL',
-        'TOTAL_BIAYA_HARIAN', 'TOTAL_BIAYA_PENGINAPAN',
-        'TOTAL_BIAYA_SPPD'
+        "NAMA_DRIVER",
+        "UNIT_KERJA",
+        "KOTA_UNIT_KERJA",
+        "NAMA_PEMBERI_TUGAS",
+        "JABATAN_PEMBERI_TUGAS",
+        "KOTA_TUJUAN",
+        "ALAT_ANGKUTAN",
+        "MAKSUD_PERJALANAN",
+        "TANGGAL_MULAI",
+        "TANGGAL_SELESAI",
+        "HOTEL",
+        "DURASI_TRIP",
+        "DURASI_INAP",
+        "BUDGET_BIAYA_HARIAN",
+        "BUDGET_HOTEL",
+        "TOTAL_BIAYA_HARIAN",
+        "TOTAL_BIAYA_PENGINAPAN",
+        "TOTAL_BIAYA_SPPD"
     ];
 
     // ✅ Check for missing fields
@@ -125,7 +137,7 @@ const checkSppdData = (data) => {
     const numericFields = [
         'BUDGET_BIAYA_HARIAN', 'BUDGET_HOTEL',
         'TOTAL_BIAYA_HARIAN', 'TOTAL_BIAYA_PENGINAPAN',
-        'TOTAL_BIAYA_SPPD', 'DURASI'
+        'TOTAL_BIAYA_SPPD', 'DURASI_TRIP', 'DURASI_INAP'
     ];
 
     numericFields.forEach(field => {

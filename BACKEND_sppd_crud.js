@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require('uuid'); // Import UUID library
 const router = express.Router();
 
 // 🔑 Google Sheet Name for SPPD
-const SHEET_NAME = 'database_sppd';
+const SHEET_NAME = 'UJICOBA_SPPD';
 
 /**
  * ✅ Create SPPD Entry with Custom Logic:
@@ -36,7 +36,26 @@ router.post('/create', async (req, res) => {
         // ✅ Convert input date to Date object for comparison
         let tanggalMulai = new Date(newData.TANGGAL_MULAI.split('/').reverse().join('-')); // Convert DD/MM/YYYY to YYYY-MM-DD
 
-        // ✅ Check for overlapping conditions with the same driver and adjust date if necessary
+        // // ✅ Check for overlapping conditions with the same driver and adjust date if necessary
+        // for (const row of rows) {
+        //     const existingDriver = row[namaDriverIndex];
+        //     const existingTanggalSelesai = row[tanggalSelesaiIndex]
+        //         ? new Date(row[tanggalSelesaiIndex].split('/').reverse().join('-'))
+        //         : null;
+
+        //     // ✅ If driver matches and the submitted start date is <= existing end date, adjust the date
+        //     if (
+        //         existingDriver === newData.NAMA_DRIVER &&
+        //         existingTanggalSelesai &&
+        //         tanggalMulai <= existingTanggalSelesai
+        //     ) {
+        //         tanggalMulai.setDate(existingTanggalSelesai.getDate() + 1);
+        //         newData.TANGGAL_MULAI = tanggalMulai.toISOString().split('T')[0];
+        //     }
+        // }
+
+
+                // ✅ Check for overlapping conditions with the same driver and adjust date if necessary
         for (const row of rows) {
             const existingDriver = row[namaDriverIndex];
             const existingTanggalSelesai = row[tanggalSelesaiIndex]
@@ -50,31 +69,41 @@ router.post('/create', async (req, res) => {
                 tanggalMulai <= existingTanggalSelesai
             ) {
                 tanggalMulai.setDate(existingTanggalSelesai.getDate() + 1);
-                newData.TANGGAL_MULAI = tanggalMulai.toISOString().split('T')[0];
+                
+                // ✅ Convert to DD/MM/YYYY format using built-in `Intl.DateTimeFormat`
+                newData.TANGGAL_MULAI = new Intl.DateTimeFormat('id-ID', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric' 
+                }).format(tanggalMulai)
             }
         }
 
-        // ✅ Prepare data for saving in the correct order of columns
-        const orderedData = [
-            newData.UUID,
-            newData.TANGGAL_INPUT,
-            newData.NAMA_DRIVER,
-            newData.ASAL,
-            newData.UNIT,
-            newData.PEMBERI_TUGAS,
-            newData.TUJUAN,
-            newData.ALAT_ANGKUTAN,
-            newData.MAKSUD_PERJALANAN,
-            newData.TANGGAL_MULAI,
-            newData.TANGGAL_SELESAI,
-            newData.DURASI,
-            newData.HOTEL,
-            newData.BUDGET_BIAYA_HARIAN,
-            newData.BUDGET_HOTEL,
-            newData.TOTAL_BIAYA_HARIAN,
-            newData.TOTAL_BIAYA_PENGINAPAN,
-            newData.TOTAL_BIAYA_SPPD
-        ];
+// ✅ Prepare data for saving in the correct order of columns
+const orderedData = [
+    newData.UUID,
+    newData.TANGGAL_INPUT,
+    newData.NAMA_DRIVER,
+    newData.UNIT_KERJA,
+    newData.KOTA_UNIT_KERJA,
+    newData.NAMA_PEMBERI_TUGAS,
+    newData.JABATAN_PEMBERI_TUGAS,
+    newData.KOTA_TUJUAN,
+    newData.ALAT_ANGKUTAN,
+    newData.MAKSUD_PERJALANAN,
+    newData.TANGGAL_MULAI,
+    newData.TANGGAL_SELESAI,
+    newData.HOTEL,
+    newData.DURASI_TRIP,
+    newData.DURASI_INAP,
+    newData.BUDGET_BIAYA_HARIAN,
+    newData.BUDGET_HOTEL,
+    newData.TOTAL_BIAYA_HARIAN,
+    newData.TOTAL_BIAYA_PENGINAPAN,
+    newData.TOTAL_BIAYA_SPPD
+];
+
+
 
         // ✅ Save the new entry into Google Sheets
         await addSheetData(SHEET_NAME, [orderedData]);
