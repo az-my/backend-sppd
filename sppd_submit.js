@@ -14,6 +14,16 @@ document.addEventListener("DOMContentLoaded", () => {
             jsonData[key] = value;
         });
 
+         // ✅ Manually Add Disabled (Auto-Filled) Fields
+         jsonData["KOTA_UNIT_KERJA"] = document.getElementById("KOTA_UNIT_KERJA").value;
+         jsonData["STATUS_DRIVER"] = document.getElementById("STATUS_DRIVER").value;
+         jsonData["DURASI_TRIP"] = document.getElementById("DURASI_TRIP").value;
+         jsonData["DURASI_INAP"] = document.getElementById("DURASI_INAP").value;
+         jsonData["BUDGET_BIAYA_HARIAN"] = document.getElementById("BUDGET_BIAYA_HARIAN").value;
+         jsonData["BUDGET_HOTEL"] = document.getElementById("BUDGET_HOTEL").value;
+         jsonData["TOTAL_BIAYA_HARIAN"] = document.getElementById("TOTAL_BIAYA_HARIAN").value;
+         jsonData["TOTAL_BIAYA_PENGINAPAN"] = document.getElementById("TOTAL_BIAYA_PENGINAPAN").value;
+         jsonData["TOTAL_BIAYA_SPPD"] = document.getElementById("TOTAL_BIAYA_SPPD").value;
         console.log("Submitting Data:", jsonData); // ✅ Debugging: Check data before sending
 
         try {

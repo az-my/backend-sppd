@@ -50,7 +50,7 @@
                     </div>
 
                     <!-- ✅ Second Row: Tanggal Mulai, Tanggal Selesai, Hotel, Nama Pejabat Pemberi Tugas, Jabatan Pejabat Pemberi Tugas -->
-                    <div class="grid gap-6 mb-6 md:grid-cols-5">
+                    <div class="grid gap-6 mb-6 md:grid-cols-6">
                         <div>
                             <label for="TANGGAL_MULAI" class="block text-gray-700 font-bold mb-2">Tanggal Mulai:</label>
                             <input id="TANGGAL_MULAI" name="TANGGAL_MULAI" type="date" required class="shadow border rounded w-full py-2 px-3 text-gray-700">
@@ -70,6 +70,18 @@
                         <!-- ✅ Hidden Field to Store "Yes" or "No" -->
                         <input id="HOTEL_STATUS" name="HOTEL_STATUS" type="hidden" value="No">
                         <div>
+                            <label for="UNIT_KERJA" class="block text-gray-700 font-bold mb-2">Unit Kerja:</label>
+                            <select id="UNIT_KERJA" name="UNIT_KERJA"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none">
+                                <option value="">Pilih Unit Kerja</option>
+                                <option value="UPT Banda Aceh">UPT Banda Aceh</option>
+                                <option value="ULTG Banda Aceh">ULTG Banda Aceh</option>
+                                <option value="ULTG Meulaboh">ULTG Meulaboh</option>
+                                <option value="ULTG Langsa">ULTG Langsa</option>
+                            </select>
+                        </div>
+                        
+                        <div>
                             <label for="NAMA_PEMBERI_TUGAS" class="block text-gray-700 font-bold mb-2">Nama Pejabat Pemberi Tugas:</label>
                             <input id="NAMA_PEMBERI_TUGAS" name="NAMA_PEMBERI_TUGAS" type="text" required class="shadow border rounded w-full py-2 px-3 text-gray-700">
                         </div>
@@ -83,12 +95,18 @@
                 <!-- 🔵 Auto-Fill Fields -->
                 <div class="bg-white shadow-md rounded-lg p-6">
                     <h3 class="text-lg font-bold text-gray-700 mb-4">🔵 Auto-Filled Fields</h3>
-                    <div class="grid gap-6 mb-6 md:grid-cols-8">
+                    <div class="grid gap-6 mb-6 md:grid-cols-9">
                         <div>
                             <label for="STATUS_DRIVER" class="block text-gray-700 font-bold mb-2">Status Driver:</label>
                             <input id="STATUS_DRIVER" name="STATUS_DRIVER" type="text" disabled 
                                    class="bg-gray-200 shadow border rounded w-full py-2 px-3 text-gray-700">
                         </div>
+                        <div>
+                            <label for="KOTA_UNIT_KERJA" class="block text-gray-700 font-bold mb-2">Kota Unit Kerja:</label>
+                            <input id="KOTA_UNIT_KERJA" name="KOTA_UNIT_KERJA" type="text" disabled
+                                   class="bg-gray-200 shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        
                         <div>
                             <label for="DURASI_TRIP" class="block text-gray-700 font-bold mb-2">Durasi Trip (hari):</label>
                             <input id="DURASI_TRIP" name="DURASI_TRIP" type="text" disabled 
@@ -115,7 +133,7 @@
                                    class="bg-gray-200 shadow border rounded w-full py-2 px-3 text-gray-700">
                         </div>
                         <div>
-                            <label for="TOTAL_BIAYA_PENGINAPAN" class="block text-gray-700 font-bold mb-2">Total Biaya Penginapan:</label>
+                            <label for="TOTAL_BIAYA_PENGINAPAN" class="block text-gray-700 font-bold mb-2">Total Biaya HOTEL</label>
                             <input id="TOTAL_BIAYA_PENGINAPAN" name="TOTAL_BIAYA_PENGINAPAN" type="text" disabled 
                                    class="bg-gray-200 shadow border rounded w-full py-2 px-3 text-gray-700">
                         </div>

@@ -83,10 +83,13 @@ const sortDataByPriority = (data, header) => {
 
     return groupedData;
 };
+
+
+
 const checkSppdData = (data) => {
     const requiredFields = [
         "NAMA_DRIVER",
-        "STATUS_DRIVER",  // ✅ Added STATUS_DRIVER
+        "STATUS_DRIVER",
         "UNIT_KERJA",
         "KOTA_UNIT_KERJA",
         "NAMA_PEMBERI_TUGAS",
@@ -94,8 +97,8 @@ const checkSppdData = (data) => {
         "KOTA_TUJUAN",
         "ALAT_ANGKUTAN",
         "MAKSUD_PERJALANAN",
-        "TANGGAL_MULAI",
-        "TANGGAL_SELESAI",
+        "TANGGAL_MULAI",   // ✅ No conversion, just ensure it exists
+        "TANGGAL_SELESAI", // ✅ No conversion, just ensure it exists
         "HOTEL_STATUS",
         "DURASI_TRIP",
         "DURASI_INAP",
@@ -112,29 +115,7 @@ const checkSppdData = (data) => {
         throw new Error(`❌ Missing required fields: ${missingFields.join(', ')}`);
     }
 
-    /**
-     * ✅ Convert Date to DD/MM/YYYY format and ensure it's saved as a string.
-     * @param {string|Date} dateObj - Date to transform
-     * @returns {string} - Formatted date in DD/MM/YYYY
-     */
-    const transformDateToDDMMYYYY = (dateObj) => {
-        const date = new Date(dateObj);
-        if (isNaN(date)) {
-            throw new Error(`❌ Invalid date provided.`);
-        }
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`; // Prevents single quote formatting
-    };
-
-    // ✅ Ensure date fields are cleaned and correctly formatted
-    const dateFields = ['TANGGAL_MULAI', 'TANGGAL_SELESAI'];
-    dateFields.forEach(field => {
-        data[field] = transformDateToDDMMYYYY(data[field]);  // Format corrected to DD/MM/YYYY
-    });
-
-    // ✅ Clean all numeric fields and ensure no single quote issue
+    // ✅ Ensure numeric fields are properly formatted
     const numericFields = [
         'BUDGET_BIAYA_HARIAN', 'BUDGET_HOTEL',
         'TOTAL_BIAYA_HARIAN', 'TOTAL_BIAYA_PENGINAPAN',
@@ -143,26 +124,19 @@ const checkSppdData = (data) => {
 
     numericFields.forEach(field => {
         if (typeof data[field] === 'string') {
-            // ✅ Convert Indonesian format to proper float format
             data[field] = data[field]
                 .replace(/\./g, '')   // Remove thousands separator
                 .replace(',', '.');   // Convert decimal separator
         }
-        
-        // ✅ Convert to a proper number
+
         data[field] = parseFloat(data[field]);
         if (isNaN(data[field])) {
             throw new Error(`❌ ${field} must be a valid number.`);
         }
     });
+
+    console.log("✅ Processed Data:", data);
 };
-
-/**
- * ✅ Export the function for use in other files
- */
-module.exports = { checkSppdData };
-
-
 
 module.exports = {
     getStatusDriver,
@@ -171,3 +145,6 @@ module.exports = {
     getMonthNames,
     checkSppdData
 };
+
+
+

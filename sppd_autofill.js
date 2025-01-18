@@ -191,6 +191,28 @@ function updateBudgetAndTotalCosts() {
     document.getElementById("TANGGAL_SELESAI").addEventListener("change", calculateTotals);
 }
 
+// ✅ Function to Auto-Fill KOTA_UNIT_KERJA based on UNIT_KERJA
+function handleUnitKerjaChange() {
+    const unitKerjaInput = document.getElementById("UNIT_KERJA");
+    const kotaUnitKerjaInput = document.getElementById("KOTA_UNIT_KERJA");
+
+    if (!unitKerjaInput || !kotaUnitKerjaInput) return;
+
+    const unitKotaMapping = {
+        "UPT Banda Aceh": "Banda Aceh",
+        "ULTG Banda Aceh": "Banda Aceh",
+        "ULTG Meulaboh": "Meulaboh",
+        "ULTG Langsa": "Langsa"
+    };
+
+    function updateKotaUnitKerja() {
+        const selectedUnit = unitKerjaInput.value;
+        kotaUnitKerjaInput.value = unitKotaMapping[selectedUnit] || "";
+    }
+
+    unitKerjaInput.addEventListener("change", updateKotaUnitKerja);
+}
+
 
 
 // ✅ Initialize Date Restrictions on Page Load
@@ -202,4 +224,5 @@ document.addEventListener("DOMContentLoaded", () => {
     calculateDurasiTrip(); // 
     handleHotelSwitcher(); 
     updateBudgetAndTotalCosts();//✅ Calculate DURASI_TRIP based on selected dates
+    handleUnitKerjaChange(); // ✅ Auto-fill KOTA_UNIT_KERJA based on UNIT_KERJA
 });
