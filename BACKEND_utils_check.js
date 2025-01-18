@@ -86,6 +86,7 @@ const sortDataByPriority = (data, header) => {
 const checkSppdData = (data) => {
     const requiredFields = [
         "NAMA_DRIVER",
+        "STATUS_DRIVER",  // ✅ Added STATUS_DRIVER
         "UNIT_KERJA",
         "KOTA_UNIT_KERJA",
         "NAMA_PEMBERI_TUGAS",
@@ -95,7 +96,7 @@ const checkSppdData = (data) => {
         "MAKSUD_PERJALANAN",
         "TANGGAL_MULAI",
         "TANGGAL_SELESAI",
-        "HOTEL",
+        "HOTEL_STATUS",
         "DURASI_TRIP",
         "DURASI_INAP",
         "BUDGET_BIAYA_HARIAN",

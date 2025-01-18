@@ -84,6 +84,7 @@ const orderedData = [
     newData.UUID,
     newData.TANGGAL_INPUT,
     newData.NAMA_DRIVER,
+    newData.STATUS_DRIVER,  // ✅ Added STATUS_DRIVER
     newData.UNIT_KERJA,
     newData.KOTA_UNIT_KERJA,
     newData.NAMA_PEMBERI_TUGAS,
@@ -93,7 +94,7 @@ const orderedData = [
     newData.MAKSUD_PERJALANAN,
     newData.TANGGAL_MULAI,
     newData.TANGGAL_SELESAI,
-    newData.HOTEL,
+    newData.HOTEL_STATUS,
     newData.DURASI_TRIP,
     newData.DURASI_INAP,
     newData.BUDGET_BIAYA_HARIAN,
@@ -102,6 +103,7 @@ const orderedData = [
     newData.TOTAL_BIAYA_PENGINAPAN,
     newData.TOTAL_BIAYA_SPPD
 ];
+
 
 
 

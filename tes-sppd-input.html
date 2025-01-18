@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPPD Input Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet" type="text/css" />->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <div class="w-full mx-auto p-4 sm:p-6">
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-bold mb-4 text-gray-700">Isi Data Mentah SPPD</h2>
+            
+            <form id="sppdForm" class="grid gap-4">
+
+                <!-- 🟢 Manual Entry Fields -->
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-700 mb-4">🟢 Manual Input</h3>
+
+                    <!-- ✅ First Row: Nama Driver, Maksud Perjalanan, Alat Angkutan, Kota Tujuan -->
+                    <div class="grid gap-6 mb-6 md:grid-cols-4">
+                        <div>
+                            <label for="NAMA_DRIVER" class="block text-gray-700 font-bold mb-2">Nama Driver:</label>
+                            <select id="NAMA_DRIVER" name="NAMA_DRIVER" required class="shadow border rounded w-full py-2 px-3 text-gray-700">
+                                <option value="">Pilih Driver</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="MAKSUD_PERJALANAN" class="block text-gray-700 font-bold mb-2">Maksud Perjalanan:</label>
+                            <input id="MAKSUD_PERJALANAN" name="MAKSUD_PERJALANAN" type="text" required class="shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div>
+                            <label for="ALAT_ANGKUTAN" class="block text-gray-700 font-bold mb-2">Alat Angkutan:</label>
+                            <input id="ALAT_ANGKUTAN" name="ALAT_ANGKUTAN" type="text" required class="shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div>
+                            <label for="KOTA_TUJUAN" class="block text-gray-700 font-bold mb-2">Kota Tujuan:</label>
+                            <input id="KOTA_TUJUAN" name="KOTA_TUJUAN" type="text" required class="shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                    </div>
+
+                    <!-- ✅ Second Row: Tanggal Mulai, Tanggal Selesai, Hotel, Nama Pejabat Pemberi Tugas, Jabatan Pejabat Pemberi Tugas -->
+                    <div class="grid gap-6 mb-6 md:grid-cols-5">
+                        <div>
+                            <label for="TANGGAL_MULAI" class="block text-gray-700 font-bold mb-2">Tanggal Mulai:</label>
+                            <input id="TANGGAL_MULAI" name="TANGGAL_MULAI" type="date" required class="shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div>
+                            <label for="TANGGAL_SELESAI" class="block text-gray-700 font-bold mb-2">Tanggal Selesai:</label>
+                            <input id="TANGGAL_SELESAI" name="TANGGAL_SELESAI" type="date" required class="shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <!-- ✅ Hotel Switch (ON/OFF) - Default: OFF -->
+                        <div class="flex items-center">
+                            <label for="HOTEL" class="block text-gray-700 font-bold mb-2 mr-2">Hotel:</label>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input id="HOTEL" name="HOTEL" type="checkbox" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-300 peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                        <!-- ✅ Hidden Field to Store "Yes" or "No" -->
+                        <input id="HOTEL_STATUS" name="HOTEL_STATUS" type="hidden" value="No">
+                        <div>
+                            <label for="NAMA_PEMBERI_TUGAS" class="block text-gray-700 font-bold mb-2">Nama Pejabat Pemberi Tugas:</label>
+                            <input id="NAMA_PEMBERI_TUGAS" name="NAMA_PEMBERI_TUGAS" type="text" required class="shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div>
+                            <label for="JABATAN_PEMBERI_TUGAS" class="block text-gray-700 font-bold mb-2">Jabatan Pejabat Pemberi Tugas:</label>
+                            <input id="JABATAN_PEMBERI_TUGAS" name="JABATAN_PEMBERI_TUGAS" type="text" required class="shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🔵 Auto-Fill Fields -->
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-700 mb-4">🔵 Auto-Filled Fields</h3>
+                    <div class="grid gap-6 mb-6 md:grid-cols-8">
+                        <div>
+                            <label for="STATUS_DRIVER" class="block text-gray-700 font-bold mb-2">Status Driver:</label>
+                            <input id="STATUS_DRIVER" name="STATUS_DRIVER" type="text" disabled 
+                                   class="bg-gray-200 shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div>
+                            <label for="DURASI_TRIP" class="block text-gray-700 font-bold mb-2">Durasi Trip (hari):</label>
+                            <input id="DURASI_TRIP" name="DURASI_TRIP" type="text" disabled 
+                                   class="bg-gray-200 shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div>
+                            <label for="DURASI_INAP" class="block text-gray-700 font-bold mb-2">Durasi Inap (hari):</label>
+                            <input id="DURASI_INAP" name="DURASI_INAP" type="text" disabled 
+                                   class="bg-gray-200 shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div>
+                            <label for="BUDGET_BIAYA_HARIAN" class="block text-gray-700 font-bold mb-2">Budget Biaya Harian:</label>
+                            <input id="BUDGET_BIAYA_HARIAN" name="BUDGET_BIAYA_HARIAN" type="text" disabled 
+                                   class="bg-gray-200 shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div>
+                            <label for="BUDGET_HOTEL" class="block text-gray-700 font-bold mb-2">Budget Hotel:</label>
+                            <input id="BUDGET_HOTEL" name="BUDGET_HOTEL" type="text" disabled 
+                                   class="bg-gray-200 shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div>
+                            <label for="TOTAL_BIAYA_HARIAN" class="block text-gray-700 font-bold mb-2">Total Biaya Harian:</label>
+                            <input id="TOTAL_BIAYA_HARIAN" name="TOTAL_BIAYA_HARIAN" type="text" disabled 
+                                   class="bg-gray-200 shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div>
+                            <label for="TOTAL_BIAYA_PENGINAPAN" class="block text-gray-700 font-bold mb-2">Total Biaya Penginapan:</label>
+                            <input id="TOTAL_BIAYA_PENGINAPAN" name="TOTAL_BIAYA_PENGINAPAN" type="text" disabled 
+                                   class="bg-gray-200 shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div>
+                            <label for="TOTAL_BIAYA_SPPD" class="block text-gray-700 font-bold mb-2">Total Biaya SPPD:</label>
+                            <input id="TOTAL_BIAYA_SPPD" name="TOTAL_BIAYA_SPPD" type="text" disabled 
+                                   class="bg-gray-200 shadow border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <button type="submit" id="submitBtn" class="bg-blue-500 text-white px-4 py-2 rounded">
+                    Submit
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+<!-- ✅ Add this before closing </body> -->
+<script src="sppd_autofill.js"></script>
+<script src="sppd_submit.js"></script>
+</body>
+
+
+
+</html>
