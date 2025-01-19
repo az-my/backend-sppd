@@ -63,30 +63,74 @@ const generateReport = async (reportType, req, res) => {
 
         if (reportType === 'rekap-kantor') {
             const groupedData = {};
+            let grandTotalBiayaSPPD = 0;
+            let grandTotalJumlahTransaksi = 0;
+            let grandTotalJumlahJamLembur = 0;
+            let grandTotalJumlahJamBayar = 0;
+        
             finalData.forEach(row => {
                 const driver = row[header.indexOf('NAMA_DRIVER')];
-                const biayaSPPD = parseFloat(row[header.indexOf('TOTAL_BIAYA')]?.replace(/\./g, '').replace(',', '.')) || 0;
-                totalBiayaSPPD += biayaSPPD;
-
+                const biayaSPPD = parseFloat(
+                    (row[header.indexOf('TOTAL_BIAYA')] ?? "0").toString().replace(/\./g, '').replace(',', '.')
+                ) || 0;
+            
+                const jumlahJamLembur = parseFloat(
+                    (row[header.indexOf('TOTAL_JAM_LEMBUR')] ?? "0").toString().replace(/\./g, '').replace(',', '.')
+                ) || 0;
+            
+                const jumlahJamBayar = parseFloat(
+                    (row[header.indexOf('TOTAL_JAM_BAYAR')] ?? "0").toString().replace(/\./g, '').replace(',', '.')
+                ) || 0;
+            
                 if (!groupedData[driver]) {
                     groupedData[driver] = {
                         NAMA_DRIVER: driver,
                         JUMLAH_TRANSAKSI: 0,
-                        TOTAL_BIAYA_SPPD: 0,
-                        RECORDS: []
+                        JUMLAH_JAM_LEMBUR: 0,
+                        JUMLAH_JAM_BAYAR: 0,
+                        TOTAL_BIAYA_SPPD: 0
                     };
                 }
+            
+                // ✅ Accumulate per driver
                 groupedData[driver].JUMLAH_TRANSAKSI += 1;
+                groupedData[driver].JUMLAH_JAM_LEMBUR += jumlahJamLembur;
+                groupedData[driver].JUMLAH_JAM_BAYAR += jumlahJamBayar;
                 groupedData[driver].TOTAL_BIAYA_SPPD += biayaSPPD;
-                groupedData[driver].RECORDS.push(row);
+            
+                // ✅ Accumulate for grand total
+                grandTotalJumlahTransaksi += 1;
+                grandTotalJumlahJamLembur += jumlahJamLembur;
+                grandTotalJumlahJamBayar += jumlahJamBayar;
+                grandTotalBiayaSPPD += biayaSPPD;
             });
-
-            // ✅ Convert grouped data into array format for CSV export
-            formattedData = Object.values(groupedData).map(group => ({
+            
+        
+            // ✅ Convert grouped data into an array format
+            const summaryData = Object.values(groupedData).map(group => ({
                 ...group,
-                TOTAL_BIAYA_SPPD: group.TOTAL_BIAYA_SPPD.toLocaleString('id-ID', { minimumFractionDigits: 2 })
+                TOTAL_BIAYA_SPPD: group.TOTAL_BIAYA_SPPD.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
+                JUMLAH_JAM_LEMBUR: group.JUMLAH_JAM_LEMBUR.toFixed(2),
+                JUMLAH_JAM_BAYAR: group.JUMLAH_JAM_BAYAR.toFixed(2)
             }));
-        } else {
+        
+            // ✅ Create Grand Total Data (Single Summary)
+            const grandTotal = {
+                GRAND_JUMLAH_TRANSAKSI: grandTotalJumlahTransaksi,
+                GRAND_JUMLAH_JAM_LEMBUR: grandTotalJumlahJamLembur.toFixed(2),
+                GRAND_JUMLAH_JAM_BAYAR: grandTotalJumlahJamBayar.toFixed(2),
+                GRAND_TOTAL_BIAYA_SPPD: grandTotalBiayaSPPD.toLocaleString('id-ID', { minimumFractionDigits: 2 })
+            };
+        
+            // ✅ Return summarized data & grand total separately
+            return res.json({
+                message: "✅ Successfully generated rekap-kantor summary",
+                summary: summaryData,  // Each driver's data
+                grand_total: grandTotal // Single object with summed values
+            });
+        }
+        
+         else {
             // ✅ Standard format for other reports
             formattedData = finalData;
             totalBiayaSPPD = finalData.reduce((sum, row) => {
