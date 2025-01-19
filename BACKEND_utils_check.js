@@ -24,18 +24,28 @@ const parseDate = (dateStr) => {
  * ✅ Generate BULAN_TRANSAKSI and BULAN_MASUK_TAGIHAN from TANGGAL_MULAI
  */
 const getMonthNames = (dateStr) => {
-    const [day, month, year] = dateStr.split('/').map(Number);
-    const date = new Date(year, month - 1, day);
+    // Convert 'YYYY-MM-DD' to a Date object
+    const date = new Date(dateStr);
+
+    // List of month names
     const monthNames = [
         "Januari", "Februari", "Maret", "April", "Mei", "Juni",
         "Juli", "Agustus", "September", "Oktober", "November", "Desember"
     ];
 
-    const bulanTransaksi = `${monthNames[month - 1]} ${year}`;
-    const bulanMasukTagihan = `${monthNames[month % 12]} ${month === 12 ? year + 1 : year}`;
+    // Extract year and month
+    const year = date.getFullYear();
+    const month = date.getMonth(); // 0-based index (0 = Januari)
+
+    // Calculate next month and its year
+    const nextMonth = (month + 1) % 12;
+    const nextYear = month === 11 ? year + 1 : year;
+
+    const bulanTransaksi = `${monthNames[month]} ${year}`;
+    const bulanMasukTagihan = `${monthNames[nextMonth]} ${nextYear}`;
+
     return { bulanTransaksi, bulanMasukTagihan };
 };
-
 /**
  * ✅ Sorting Logic:
  * 1. Driver Tetap First, Driver Sewa Second
