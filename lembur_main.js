@@ -7,10 +7,19 @@ import {
 } from './lembur_script.js';
 
 import { submitLemburForm } from "./lembur_submit.js";
-
+import fetchAndRenderTable from "./fetchAndRenderTable.js"; // ✅ Use default import
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("🚀 Lembur Form Loaded");
+
+        // ✅ Ensure tables exist before calling fetch
+        if (document.querySelector("#lemburTable")) {
+            fetchAndRenderTable("lembur", "#lemburTable");
+        }
+    
+        if (document.querySelector("#sppdTable")) {
+            fetchAndRenderTable("sppd", "#sppdTable");
+        }
 
     // ✅ Populate Dropdowns
     populateDriverDropdown();
@@ -69,5 +78,10 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault(); // 🚀 Stop default form submission
         submitLemburForm(); // 🔥 Call the function manually
     });
+
+        // // ✅ Fetch and Render Tables for Both Modules
+        // fetchAndRenderTable("lembur", "#lemburTable");
+        // fetchAndRenderTable("sppd", "#sppdTable");
+
 
 });
