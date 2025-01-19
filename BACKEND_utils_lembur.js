@@ -120,15 +120,22 @@ const parseDate = (dateStr) => {
  * ✅ Generate BULAN_TRANSAKSI and BULAN_MASUK_TAGIHAN from TANGGAL_MULAI
  */
 const getMonthNames = (dateStr) => {
-    const [day, month, year] = dateStr.split('/').map(Number);
+    // ✅ Ensure dateStr is properly formatted (yyyy-mm-dd)
+    const [year, month, day] = dateStr.split('-').map(Number);
+
+    // ✅ Create a Date object
     const date = new Date(year, month - 1, day);
+
+    // ✅ Month names in Bahasa Indonesia
     const monthNames = [
         "Januari", "Februari", "Maret", "April", "Mei", "Juni",
         "Juli", "Agustus", "September", "Oktober", "November", "Desember"
     ];
 
+    // ✅ Extract proper values
     const bulanTransaksi = `${monthNames[month - 1]} ${year}`;
-    const bulanMasukTagihan = `${monthNames[month % 12]} ${month === 12 ? year + 1 : year}`;
+    const bulanMasukTagihan = `${monthNames[(month % 12)]} ${month === 12 ? year + 1 : year}`;
+
     return { bulanTransaksi, bulanMasukTagihan };
 };
 

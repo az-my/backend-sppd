@@ -1,141 +1,143 @@
-
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Complete Table with Integrated Title and Footer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet" type="text/css" />
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
-      integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-    <script src="
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complete Table with Integrated Title and Footer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+    integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="
 https://cdn.jsdelivr.net/npm/@develoka/angka-terbilang-js@1.4.2/index.min.js
 "></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/id.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/id.min.js"></script>
 
 
+<!-- ✅ Main JS -->
+<script type="module" src="utils_main.js"></script>
+</head>
 
-  </head>
-  <body class="bg-white-100">
-    <div class="w-full bg-white">
-      <div id="laporan-wrapper" class="overflow-x-auto">
-        <table id="laporan" class="w-auto mx-auto text-xs">
-          <!-- Table Title -->
-          <thead>
-            <tr>
-              <th colspan="9" class="border-b border-gray-800 px-4 py-2 text-center">
-                <div class="font-semibold text-xs text-sm text-left">PT. PALMA NAFINDO PRATAMA</div>
-                <div class="font-semibold text-xs text-left">KOTA BANDA ACEH</div>
-                <div class="font-semibold text-sm mt-1">
-                  <br />PERINCIAN BIAYA DINAS PENGEMUDI PT. PALMA NAFINDO PRATAMA <br />
-                  PT PLN (Persero) UNIT INDUK P3B SUMATERA UPT BANDA ACEH
-                </div>
-              </th>
-            </tr>
-            <!-- Column Headers -->
-            <tr>
-              <th rowspan="2" class="border border-gray-800 px-2 py-1 text-center align-middle">No</th>
-              <th rowspan="2" class="border border-gray-800 px-2 py-1 text-center align-middle">Nama</th>
-              <th colspan="3" class="border border-gray-800 px-2 py-1 text-center">Tanggal SPPD</th>
-              <th rowspan="2" class="border border-gray-800 px-2 py-1 text-center align-middle">
-                Pejabat Pemberi Tugas
-              </th>
-              <th rowspan="2" class="border border-gray-800 px-2 py-1 text-center align-middle">Tujuan</th>
-              <th rowspan="2" class="border border-gray-800 px-2 py-1 text-center align-middle">Jumlah</th>
-              <th rowspan="2" class="border border-gray-800 px-2 py-1 text-center align-middle">Ket</th>
-            </tr>
-            <tr>
-              <th class="border border-gray-800 px-2 py-1 text-center">Mulai</th>
-              <th class="border border-gray-800 px-2 py-1 text-center">s/d</th>
-              <th class="border border-gray-800 px-2 py-1 text-center">Sampai</th>
-            </tr>
-          </thead>
-          <tbody id="data-table-body"></tbody>
-          <tfoot>
-            <!-- Summary Rows -->
-            <tr>
-              <td colspan="7" class="border border-gray-800 pl-80 py-1 font-semibold">Jumlah</td>
-              <td class="border border-gray-800 px-2 py-1 text-right" >
-                <div class="flex justify-between w-full">
-                  <span class="text-left">Rp</span>
-                  <span class="text-right" id="total-amount"></span>
+<body class="bg-white-100" data-module="sppd" data-endpoint="report/rekap-pln">
+  <div class="w-full bg-white">
+    <div id="laporan-wrapper" class="overflow-x-auto">
+      <div class="font-semibold text-xs text-sm text-center">PT. PALMA NAFINDO PRATAMA</div>
+              <div class="font-semibold text-xs text-center">KOTA BANDA ACEH</div>
+              <div class="font-semibold text-sm text-center mt-1">
+                <br />PERINCIAN BIAYA DINAS PENGEMUDI PT. PALMA NAFINDO PRATAMA <br />
+                PT PLN (Persero) UNIT INDUK P3B SUMATERA UPT BANDA ACEH
               </div>
-              </td>
-              <td class="border border-gray-800 px-2 py-1"></td>
-            </tr>
-            <tr>
-              <td colspan="7" class="border border-gray-800 pl-80 py-1 font-semibold">Biaya Admin (5%)</td>
-              <td class="border border-gray-800 px-2 py-1 text-right" >
-                <div class="flex justify-between w-full">
-                  <span class="text-left">Rp</span>
-                  <span class="text-right" id="total-biaya-admin"></span>
+      <table id="laporan" class="w-auto mx-auto text-xs">
+        <!-- Table Title -->
+        <thead>
+          <tr>
+            <th colspan="9" class="border-b border-gray-800 px-4 py-2 text-center">
+              
+            </th>
+          </tr>
+          <!-- Column Headers -->
+          <tr>
+            <!-- <th rowspan="2" class="border border-gray-800 px-2 py-1 text-center align-middle">No</th>
+            <th rowspan="2" class="border border-gray-800 px-2 py-1 text-center align-middle">Nama</th>
+            <th colspan="3" class="border border-gray-800 px-2 py-1 text-center">Tanggal SPPD</th>
+            <th rowspan="2" class="border border-gray-800 px-2 py-1 text-center align-middle">
+              Pejabat Pemberi Tugas
+            </th>
+            <th rowspan="2" class="border border-gray-800 px-2 py-1 text-center align-middle">Tujuan</th>
+            <th rowspan="2" class="border border-gray-800 px-2 py-1 text-center align-middle">Jumlah</th>
+            <th rowspan="2" class="border border-gray-800 px-2 py-1 text-center align-middle">Ket</th>
+          </tr>
+          <tr>
+            <th class="border border-gray-800 px-2 py-1 text-center">Mulai</th>
+            <th class="border border-gray-800 px-2 py-1 text-center">s/d</th>
+            <th class="border border-gray-800 px-2 py-1 text-center">Sampai</th> -->
+          </tr>
+        </thead>
+        <tbody id="data-table-body"></tbody>
+        <tfoot>
+          <!-- Summary Rows -->
+          <tr>
+            <td colspan="7" class="border border-gray-800 pl-80 py-1 font-semibold">Jumlah</td>
+            <td class="border border-gray-800 px-2 py-1 text-right">
+              <div class="flex justify-between w-full">
+                <span class="text-left">Rp</span>
+                <span class="text-right" id="total-amount"></span>
               </div>
-              </td>
-              <td class="border border-gray-800 px-2 py-1"></td>
-            </tr>
-            <tr>
-              <td colspan="7" class="border border-gray-800 pl-80 py-1 font-semibold">
-                Total Tagihan SPPD <span id="transaction-month"></span>
-              </td>
-              <td class="border border-gray-800 px-2 py-1 text-right" >
-                <div class="flex justify-between w-full">
-                  <span class="text-left">Rp</span>
-                  <span class="text-right" id="total-invoice-without-tax"></span>
+            </td>
+            <td class="border border-gray-800 px-2 py-1"></td>
+          </tr>
+          <tr>
+            <td colspan="7" class="border border-gray-800 pl-80 py-1 font-semibold">Biaya Admin (5%)</td>
+            <td class="border border-gray-800 px-2 py-1 text-right">
+              <div class="flex justify-between w-full">
+                <span class="text-left">Rp</span>
+                <span class="text-right" id="total-biaya-admin"></span>
               </div>
-              </td>
-              <td class="border border-gray-800 px-2 py-1"></td>
-            </tr>
-            <tr>
-              <td colspan="7" class="border border-gray-800 pl-80 py-1 font-semibold">PPN (11%)</td>
-              <td class="border border-gray-800 px-2 py-1 text-right" >
-                <div class="flex justify-between w-full">
-                  <span class="text-left">Rp</span>
-                  <span class="text-right" id="total-ppn"></span>
+            </td>
+            <td class="border border-gray-800 px-2 py-1"></td>
+          </tr>
+          <tr>
+            <td colspan="7" class="border border-gray-800 pl-80 py-1 font-semibold">
+              Total Tagihan SPPD <span id="transaction-month"></span>
+            </td>
+            <td class="border border-gray-800 px-2 py-1 text-right">
+              <div class="flex justify-between w-full">
+                <span class="text-left">Rp</span>
+                <span class="text-right" id="total-invoice-without-tax"></span>
               </div>
-              </td>
-              <td class="border border-gray-800 px-2 py-1"></td>
-            </tr>
-            <tr>
-              <td colspan="7" class="border border-gray-800 pl-80 py-1 font-semibold">
-                Total Tagihan SPPD <span id="transaction-month"></span> + PPN
-              </td>
-              <td class="border border-gray-800 px-2 py-1 text-right" >
-                <div class="flex justify-between w-full">
-                  <span class="text-left">Rp</span>
-                  <span class="text-right" id="total-final-invoice"></span>
+            </td>
+            <td class="border border-gray-800 px-2 py-1"></td>
+          </tr>
+          <tr>
+            <td colspan="7" class="border border-gray-800 pl-80 py-1 font-semibold">PPN (11%)</td>
+            <td class="border border-gray-800 px-2 py-1 text-right">
+              <div class="flex justify-between w-full">
+                <span class="text-left">Rp</span>
+                <span class="text-right" id="total-ppn"></span>
               </div>
-              </td>
-              <td class="border border-gray-800 px-2 py-1"></td>
-            </tr>
-            <tr>
-              <td colspan="9" id="terbilang" class="italic border border-gray-800 px-2 py-1 font-semibold text-left">
-                <span id="terbilang-amount">terbilang:</span>
-              </td>
-            </tr>
+            </td>
+            <td class="border border-gray-800 px-2 py-1"></td>
+          </tr>
+          <tr>
+            <td colspan="7" class="border border-gray-800 pl-80 py-1 font-semibold">
+              Total Tagihan SPPD <span id="transaction-month"></span> + PPN
+            </td>
+            <td class="border border-gray-800 px-2 py-1 text-right">
+              <div class="flex justify-between w-full">
+                <span class="text-left">Rp</span>
+                <span class="text-right" id="total-final-invoice"></span>
+              </div>
+            </td>
+            <td class="border border-gray-800 px-2 py-1"></td>
+          </tr>
+          <tr>
+            <td colspan="9" id="terbilang" class="italic border border-gray-800 px-2 py-1 font-semibold text-left">
+              <span id="terbilang-amount">terbilang:</span>
+            </td>
+          </tr>
 
-            <!-- Signature Section -->
-            <tr>
-              <td colspan="4" class="border-t border-gray-800 px-2 py-8 text-center align-bottom">
-                DIREKSI LAPANGAN,<br />MANAGER<br /><br><br><br><br><br><br><u>INDRA KURNIAWAN</u>
-              </td>
-              <td colspan="3"></td>
-              <td colspan="3" class="border-t border-gray-800 px-2 py-8 text-center align-bottom">
-                Banda Aceh, <span id="bulan-masuk-tagihan"></span><br />
-                KSO PT. PALMA NAFINDO PRATAMA <br>- PT. SANOBAR GUNAJAYA<br /><br><br><br><br><br><br><br><u>RIZKY NAHARDI</u>
-              </td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-      <!-- Table -->
+          <!-- Signature Section -->
+          <tr>
+            <td colspan="4" class="border-t border-gray-800 px-2 py-8 text-center align-bottom">
+              DIREKSI LAPANGAN,<br />MANAGER<br /><br><br><br><br><br><br><u>INDRA KURNIAWAN</u>
+            </td>
+            <td colspan="3"></td>
+            <td colspan="3" class="border-t border-gray-800 px-2 py-8 text-center align-bottom">
+              Banda Aceh, <span id="bulan-masuk-tagihan"></span><br />
+              KSO PT. PALMA NAFINDO PRATAMA <br>- PT. SANOBAR GUNAJAYA<br /><br><br><br><br><br><br><br><u>RIZKY
+                NAHARDI</u>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
     </div>
+    <!-- Table -->
+  </div>
 
-    <script src="sppd-report-pln.js"></script>
-  </body>
+  <!-- <script src="sppd-report-pln.js"></script> -->
+</body>
+
 </html>

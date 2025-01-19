@@ -101,14 +101,38 @@ const generateReport = async (reportType, req, res) => {
         const tax = totalTagihanWithAdmin * 0.11;
         const totalTagihanWithTax = totalTagihanWithAdmin + tax;
 
-        // ✅ Summary Key with New Calculations
-        const summary = {
-            TOTAL_BIAYA_SPPD: totalBiayaSPPD.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
-            ADMIN_FEE: adminFee.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
-            TOTAL_TAGIHAN_WITH_ADMIN: totalTagihanWithAdmin.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
-            TAX: tax.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
-            TOTAL_TAGIHAN_WITH_TAX: totalTagihanWithTax.toLocaleString('id-ID', { minimumFractionDigits: 2 })
-        };
+       // ✅ Ensure the header includes BULAN_TRANSAKSI & BULAN_MASUK_TAGIHAN
+//const updatedHeader = [...header, "BULAN_TRANSAKSI", "BULAN_MASUK_TAGIHAN", "HARI_SELESAI", "PAST_MIDNIGHT"];
+
+// ✅ Ensure the header includes BULAN_TRANSAKSI & BULAN_MASUK_TAGIHAN
+const bulanTransaksiIndex = updatedHeader.indexOf("BULAN_TRANSAKSI");
+const bulanMasukTagihanIndex = updatedHeader.indexOf("BULAN_MASUK_TAGIHAN");
+
+// ✅ Extract values from the last row in finalData (ensuring latest values)
+const latestBulanTransaksi = finalData.length > 0 && bulanTransaksiIndex !== -1
+    ? finalData[finalData.length - 1][bulanTransaksiIndex]
+    : "Unknown";
+
+const latestBulanMasukTagihan = finalData.length > 0 && bulanMasukTagihanIndex !== -1
+    ? finalData[finalData.length - 1][bulanMasukTagihanIndex]
+    : "Unknown";
+    
+// ✅ Updated Summary Key with BULAN_TRANSAKSI & BULAN_MASUK_TAGIHAN
+const summary = {
+    TOTAL_BIAYA_SPPD: totalBiayaSPPD.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
+    ADMIN_FEE: adminFee.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
+    TOTAL_TAGIHAN_WITH_ADMIN: totalTagihanWithAdmin.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
+    TAX: tax.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
+    TOTAL_TAGIHAN_WITH_TAX: totalTagihanWithTax.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
+
+    // ✅ Correctly fetched values from the latest record
+    LATEST_BULAN_TRANSAKSI: latestBulanTransaksi,
+    LATEST_BULAN_MASUK_TAGIHAN: latestBulanMasukTagihan
+};
+
+// ✅ Debugging: Log the summary to check values
+console.log("📌 Final Summary:", summary);
+
 
         // ✅ CSV Export Handling
         if (req.query.format?.toLowerCase() === 'csv') {
