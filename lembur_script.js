@@ -168,10 +168,10 @@ const generateTimeOptions = (startHour, endHour) => {
 // ✅ Determine Status (Weekday, Weekend, or Public Holiday)
 const checkDayStatus = (date) => {
     if (!date) return "";
-    if (publicHolidays.includes(date)) return "Public Holiday";
+    if (publicHolidays.includes(date)) return "HL";
 
     const dayOfWeek = dayjs(date).day();
-    return (dayOfWeek === 6 || dayOfWeek === 0) ? "Weekend" : "Weekday";
+    return (dayOfWeek === 6 || dayOfWeek === 0) ? "HL" : "HK";
 };
 
 // ✅ Update JAM_MULAI Dropdown Options
@@ -326,7 +326,7 @@ export const calculateTotalJamBayar = () => {
 
     let totalBayar = 0;
     
-    if (statusHariMulai === "Weekday") {
+    if (statusHariMulai === "HK") {
         // ✅ First hour ×1.5, remaining hours ×2.0
         totalBayar += Math.min(1, totalJamLembur) * 1.5;
         if (totalJamLembur > 1) {
