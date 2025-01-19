@@ -88,14 +88,14 @@ const generateReport = async (reportType, req, res) => {
             TOTAL_TAGIHAN_WITH_TAX: totalTagihanWithTax.toLocaleString('id-ID', { minimumFractionDigits: 2 })
         };
 
-        // ✅ CSV Export Handling
-        if (req.query.format?.toLowerCase() === 'csv') {
-            const csvParser = new Parser({ fields: updatedHeader });
-            const csvData = csvParser.parse(formattedData);
-            res.header('Content-Type', 'text/csv');
-            res.attachment(`${reportType}_report.csv`);
-            return res.send(csvData);
-        }
+        // // ✅ CSV Export Handling
+        // if (req.query.format?.toLowerCase() === 'csv') {
+        //     const csvParser = new Parser({ fields: updatedHeader });
+        //     const csvData = csvParser.parse(formattedData);
+        //     res.header('Content-Type', 'text/csv');
+        //     res.attachment(`${reportType}_report.csv`);
+        //     return res.send(csvData);
+        // }
 
         // ✅ JSON Response
         res.json({

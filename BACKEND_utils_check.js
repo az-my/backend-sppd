@@ -46,7 +46,7 @@ const getMonthNames = (dateStr) => {
 const sortDataByPriority = (data, header) => {
     const tanggalMulaiIndex = header.indexOf("TANGGAL_MULAI");
     const namaDriverIndex = header.indexOf("NAMA_DRIVER");
-    const unitIndex = header.indexOf("UNIT");
+    const unitIndex = header.indexOf("UNIT_KERJA");
 
     // ✅ Step 1: Sort by Driver Type
     data.sort((a, b) => {
