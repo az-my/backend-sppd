@@ -1,8 +1,18 @@
 const fetchSppdRekapPln = async () => {
-    const url = 'https://backend-sppd-production.up.railway.app/api/sppd/report/rekap-pln';
+    // Determine base URL based on the environment
+    const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    const BASE_URL = isLocal
+        ? "http://localhost:3000/api/sppd/report/rekap-pln"
+        : "https://backend-sppd-production.up.railway.app/api/sppd/report/rekap-pln";
+
+    // Log environment and URL
+    console.log(`🌍 Running in ${isLocal ? "Local Development" : "Production"} environment`);
+    console.log(`🔗 Using API URL: ${BASE_URL}`);
+
     try {
         console.log('👀 Fetching SPPD rekap PLN data...');
-        const response = await fetch(url, { headers: { 'Content-Type': 'application/json' } });
+        const response = await fetch(BASE_URL, { headers: { 'Content-Type': 'application/json' } });
+
         if (!response.ok) throw new Error(`🚨 Oof! API said: ${response.status} ${response.statusText}`);
 
         const result = await response.json();
@@ -23,6 +33,8 @@ const fetchSppdRekapPln = async () => {
         console.error('😵‍💫 API fumbled:', error.message);
     }
 };
+
+
 
 const renderTable = (data) => {
     const tbody = document.getElementById('data-table-body');
@@ -104,8 +116,8 @@ const renderSummary = (summary) => {
 const renderTransactionDetails = (firstRow) => {
     if (!firstRow) return;
 
-    const transactionMonth = firstRow[19] || '-'; // Example: "Desember 2024"
-    const bulanMasukTagihan = firstRow[20] || '-'; // Example: "Januari 2025"
+    const transactionMonth = firstRow[21] || '-'; // Example: "Desember 2024"
+    const bulanMasukTagihan = firstRow[22] || '-'; // Example: "Januari 2025"
 
     // Get today's date dynamically
     const today = new Date();
