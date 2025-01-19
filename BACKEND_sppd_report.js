@@ -41,30 +41,59 @@ const generateReport = async (reportType, req, res) => {
 
         if (reportType === 'rekap-kantor') {
             const groupedData = {};
+            let grandTotalBiayaSPPD = 0;
+            let grandTotalDurasiInap = 0;
+            let grandTotalJumlahTransaksi = 0;
+        
             sortedData.forEach(row => {
                 const driver = row[header.indexOf('NAMA_DRIVER')];
                 const biayaSPPD = parseFloat(row[header.indexOf('TOTAL_BIAYA_SPPD')]?.replace(/\./g, '').replace(',', '.')) || 0;
-                totalBiayaSPPD += biayaSPPD;
-
+                const durasiInap = parseFloat(row[header.indexOf('DURASI_INAP')]?.replace(/\./g, '').replace(',', '.')) || 0;
+        
                 if (!groupedData[driver]) {
                     groupedData[driver] = {
                         NAMA_DRIVER: driver,
                         JUMLAH_TRANSAKSI: 0,
                         TOTAL_BIAYA_SPPD: 0,
-                        RECORDS: []
+                        TOTAL_DURASI_INAP: 0
                     };
                 }
+        
+                // ✅ Accumulate per driver
                 groupedData[driver].JUMLAH_TRANSAKSI += 1;
                 groupedData[driver].TOTAL_BIAYA_SPPD += biayaSPPD;
-                groupedData[driver].RECORDS.push(row);
+                groupedData[driver].TOTAL_DURASI_INAP += durasiInap;
+        
+                // ✅ Accumulate for grand total
+                grandTotalJumlahTransaksi += 1;
+                grandTotalBiayaSPPD += biayaSPPD;
+                grandTotalDurasiInap += durasiInap;
             });
-
-            // ✅ Convert grouped data into array format for CSV export
-            formattedData = Object.values(groupedData).map(group => ({
+        
+            // ✅ Convert grouped data into an array format
+            const summaryData = Object.values(groupedData).map(group => ({
                 ...group,
-                TOTAL_BIAYA_SPPD: group.TOTAL_BIAYA_SPPD.toLocaleString('id-ID', { minimumFractionDigits: 2 })
+                TOTAL_BIAYA_SPPD: group.TOTAL_BIAYA_SPPD.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
+                TOTAL_DURASI_INAP: group.TOTAL_DURASI_INAP.toFixed(2)
             }));
-        } else {
+        
+            // ✅ Create Grand Total Data (Single Summary)
+            const grandTotal = {
+                JUMLAH_TRANSAKSI: grandTotalJumlahTransaksi,
+                TOTAL_BIAYA_SPPD: grandTotalBiayaSPPD.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
+                TOTAL_DURASI_INAP: grandTotalDurasiInap.toFixed(2)
+            };
+        
+            // ✅ Return summarized data & grand total separately
+            return res.json({
+                message: "✅ Successfully generated rekap-kantor summary",
+                summary: summaryData,  // Each driver's data
+                grand_total: grandTotal // Single object with summed values
+            });
+        }
+        
+        
+         else {
             // ✅ Standard format for other reports
             formattedData = sortedData;
             totalBiayaSPPD = sortedData.reduce((sum, row) => {
