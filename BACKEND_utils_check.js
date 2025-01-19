@@ -138,12 +138,32 @@ const checkSppdData = (data) => {
     console.log("✅ Processed Data:", data);
 };
 
+
+const checkLemburData = (data) => {
+    const requiredFields = [
+        "NAMA_DRIVER", "STATUS_DRIVER", "UNIT_KERJA", "KOTA_UNIT_KERJA", "PEMBERI_TUGAS",
+        "NAMA_FORM_1", "JABATAN_FORM_1", "NAMA_FORM_2", "JABATAN_FORM_2", "URAIAN_PEKERJAAN",
+        "TANGGAL_MULAI", "HARI_MULAI", "STATUS_HARI_MULAI", "JAM_MULAI",
+        "TANGGAL_SELESAI", "HARI_SELESAI", "STATUS_HARI_SELESAI", "JAM_SELESAI",
+        "TOTAL_JAM_LEMBUR", "TOTAL_JAM_BAYAR", "UPAH_PER_JAM", "TOTAL_BIAYA"
+    ];
+
+    const missingFields = requiredFields.filter(field => !data[field]);
+
+    return missingFields; // Return missing fields array (empty if all fields exist)
+};
+
+
+
+
+
 module.exports = {
     getStatusDriver,
     sortDataByPriority,
     parseDate,
     getMonthNames,
-    checkSppdData
+    checkSppdData,
+    checkLemburData
 };
 
 

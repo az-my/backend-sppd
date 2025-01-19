@@ -12,6 +12,7 @@ const drivers = [
     { nama: "RIZAL SAPUTRA", status: "DRIVER TETAP" },
     { nama: "ROMI SAFRUDDIN", status: "DRIVER TETAP" },
     { nama: "SUNARYO", status: "DRIVER TETAP" },
+    { nama: "SYAMAUN", status: "DRIVER TETAP" },
     { nama: "SYAHRIL", status: "DRIVER SEWA" },
     { nama: "UWIS KARNI", status: "DRIVER SEWA" },
     { nama: "VANI AL WAHABY", status: "DRIVER TETAP" },

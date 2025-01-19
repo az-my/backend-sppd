@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Lembur</title>
+
+    <!-- ✅ Daisy UI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css"> -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css" rel="stylesheet" type="text/css" /> -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.0-beta.1/daisyui.css" rel="stylesheet" type="text/css" />
+    
+    <!-- ✅ jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- ✅ External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/angka-terbilang@1.0.0/dist/angka-terbilang.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/localizedFormat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/locale/id.js"></script>
+
+    <!-- ✅ Main JS -->
+    <script type="module" src="lembur_main.js"></script>
+</head>
+
+<body class="p-5">
+
+    <!-- ✅ Full-Width Container -->
+    <div class="w-full space-y-6">
+
+        <!-- ✅ Card 1: Form -->
+        <div class="card bg-base-100 shadow-lg p-6 w-full">
+            <h2 class="card-title text-lg font-bold">Form Lembur</h2>
+
+            <form id="lemburForm" class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-6 gap-4 mt-4">
+
+                <!-- ✅ 6 Manual Entry Fields -->
+                <label class="form-control w-full"><span class="label-text">Nama Driver</span><select id="NAMA_DRIVER"
+                        class="select select-bordered w-full"></select></label>
+                <label class="form-control w-full"><span class="label-text">Unit Kerja</span><select id="UNIT_KERJA"
+                        class="select select-bordered w-full"></select></label>
+                <label class="form-control w-full md:col-span-2"><span class="label-text">Uraian
+                        Pekerjaan</span><textarea id="URAIAN_PEKERJAAN"
+                        class="textarea textarea-bordered w-full"></textarea></label>
+                <label class="form-control w-full"><span class="label-text">Tanggal Mulai</span><input type="date"
+                        id="TANGGAL_MULAI" class="input input-bordered w-full"></label>
+                <label class="form-control w-full">
+                    <span class="label-text">Jam Mulai</span>
+                    <select id="JAM_MULAI" class="select select-bordered w-full"></select>
+                </label>
+
+                <label class="form-control w-full">
+                    <span class="label-text">Jam Selesai</span>
+                    <select id="JAM_SELESAI" class="select select-bordered w-full"></select>
+                </label>
+
+
+                <!-- ✅ Auto-Filled Fields (16) -->
+                <div class="md:col-span-2 lg:col-span-8 border-t pt-4"></div>
+                <label class="form-control w-full"><span class="label-text">Status Driver</span><input type="text"
+                        id="STATUS_DRIVER" class="input input-bordered w-full" readonly></label>
+                <label class="form-control w-full"><span class="label-text">Kota Unit Kerja</span><input type="text"
+                        id="KOTA_UNIT_KERJA" class="input input-bordered w-full" readonly></label>
+                <label class="form-control w-full"><span class="label-text">Pemberi Tugas</span><input type="text"
+                        id="PEMBERI_TUGAS" class="input input-bordered w-full" readonly></label>
+                <label class="form-control w-full"><span class="label-text">Nama Form 1</span><input type="text"
+                        id="NAMA_FORM_1" class="input input-bordered w-full" readonly></label>
+                <label class="form-control w-full"><span class="label-text">Jabatan Form 1</span><input type="text"
+                        id="JABATAN_FORM_1" class="input input-bordered w-full" readonly></label>
+                <label class="form-control w-full"><span class="label-text">Nama Form 2</span><input type="text"
+                        id="NAMA_FORM_2" class="input input-bordered w-full" readonly></label>
+                <label class="form-control w-full"><span class="label-text">Jabatan Form 2</span><input type="text"
+                        id="JABATAN_FORM_2" class="input input-bordered w-full" readonly></label>
+                <label class="form-control w-full"><span class="label-text">Hari Mulai</span><input type="text"
+                        id="HARI_MULAI" class="input input-bordered w-full" readonly></label>
+                <label class="form-control w-full"><span class="label-text">Status Hari Mulai</span><input type="text"
+                        id="STATUS_HARI_MULAI" class="input input-bordered w-full" readonly></label>
+                <label class="form-control w-full"><span class="label-text">Tanggal Selesai</span><input type="text"
+                        id="TANGGAL_SELESAI" class="input input-bordered w-full" readonly></label>
+                <label class="form-control w-full"><span class="label-text">Hari Selesai</span><input type="text"
+                        id="HARI_SELESAI" class="input input-bordered w-full" readonly></label>
+                <label class="form-control w-full"><span class="label-text">Status Hari Selesai</span><input type="text"
+                        id="STATUS_HARI_SELESAI" class="input input-bordered w-full" readonly></label>
+                <label class="form-control w-full"><span class="label-text">Total Jam Lembur</span><input type="text"
+                        id="TOTAL_JAM_LEMBUR" class="input input-bordered w-full" readonly></label>
+                <label class="form-control w-full"><span class="label-text">Total Jam Bayar</span><input type="text"
+                        id="TOTAL_JAM_BAYAR" class="input input-bordered w-full" readonly></label>
+                <label class="form-control w-full"><span class="label-text">Upah Per Jam</span><input type="text"
+                        id="UPAH_PER_JAM" class="input input-bordered w-full" readonly></label>
+                <label class="form-control w-full"><span class="label-text">Total Biaya</span><input type="text"
+                        id="TOTAL_BIAYA" class="input input-bordered w-full" readonly></label>
+
+
+                <div class="md:col-span-2 lg:col-span-8"><button id="submitLemburBtn" type="button" class="btn btn-primary w-full md:w-auto">
+                    🚀 Submit Lembur
+                </button></div>
+            </form>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
