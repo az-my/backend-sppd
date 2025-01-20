@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SPPD: Lampiran</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <!-- <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet" type="text/css" /> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script> -->
+    <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
+    
+    <style>
+      @media print {
+          .page-break {
+              page-break-after: always; /* Ensures each card starts on a new page */
+          }
+          
+          body {
+              margin: 0; /* Ensures no extra margins in print mode */
+              padding: 0;
+          }
+
+          /* Optional: Remove shadows and borders for a cleaner print */
+          .no-shadow {
+              box-shadow: none !important;
+              border: none !important;
+          }
+      }
+  </style>
+  
+  </head>
+<body>
+
+    <div id="reports-container" class="container mx-auto p-8 w-full"></div>
+    <div id="bottom-tab-nav"></div>
+
+    <!-- Placeholder for Bottom Tab -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="lembaran-sppd.js"></script>
+</body>
+</html>
