@@ -11,36 +11,38 @@ const router = express.Router();
 // 🔑 Google Sheet Name for Lembur
 const SHEET_NAME = 'UJICOBA_LEMBUR';
 
+// ✅ Define the correct field order based on DB schema
+const dbColumnOrder = [
+    "UUID", "TANGGAL_INPUT", "NAMA_DRIVER", "STATUS_DRIVER", "UNIT_KERJA", "KOTA_UNIT_KERJA",
+    "PEMBERI_TUGAS", "NAMA_FORM_1", "JABATAN_FORM_1", "NAMA_FORM_2", "JABATAN_FORM_2",
+    "URAIAN_PEKERJAAN", "TANGGAL_MULAI", "HARI_MULAI", "STATUS_HARI_MULAI", "JAM_MULAI",
+    "TANGGAL_SELESAI", "HARI_SELESAI", "STATUS_HARI_SELESAI", "JAM_SELESAI",
+    "TOTAL_JAM_LEMBUR", "TOTAL_JAM_BAYAR", "UPAH_PER_JAM", "TOTAL_BIAYA"
+];
+
 // ✅ Create Lembur Entry
-router.post('/create', async (req, res) => {
+router.post("/create", async (req, res) => {
     try {
         const data = req.body;
+        console.log("📌 Raw Request Body:", data);
 
-        // ✅ Auto-generate UUID (limit to 4 characters)
+        // ✅ Auto-generate UUID and Timestamp
         const generatedUUID = uuidv4().replace(/-/g, "").substring(0, 4);
-
-        // ✅ Auto-generate TANGGAL_INPUT with full date-time format
         const tanggalInput = dayjs().format("YYYY-MM-DD HH:mm:ss");
 
-        // ✅ Validate input using checkLemburData
-        const missingFields = checkLemburData(data);
+        // ✅ Reorder Data to Match DB Column Order
+        const orderedData = { UUID: generatedUUID, TANGGAL_INPUT: tanggalInput };
         
-        if (missingFields.length > 0) {
-            return res.status(400).json({ 
-                error: "❌ Invalid data. Please fill in all required fields.",
-                missingFields: missingFields
-            });
-        }
+        // ✅ Fill the orderedData object with data based on the correct column order
+        dbColumnOrder.slice(2).forEach((column) => {
+            orderedData[column] = data[column] || ""; // Fill missing fields with empty strings
+        });
 
-        // ✅ Ensure UUID and TANGGAL_INPUT are the first two columns in the correct order
-        const orderedData = {
-            UUID: generatedUUID,
-            TANGGAL_INPUT: tanggalInput,
-            ...data  // Append the rest of the user-provided fields
-        };
+        console.log("✅ Ordered Data for Submission:", orderedData);
 
         // ✅ Add to Google Sheets (Ensures correct column order)
         await addSheetData(SHEET_NAME, [Object.values(orderedData)]);
+
         res.status(201).json({ 
             message: '🔥 Lembur entry created successfully!',
             generatedUUID: orderedData.UUID,
@@ -52,6 +54,7 @@ router.post('/create', async (req, res) => {
         res.status(500).json({ error: "Internal Server Error. Please try again." });
     }
 });
+
 
 
 // ✅ Read All Lembur Entries
