@@ -227,3 +227,17 @@ document.addEventListener("DOMContentLoaded", () => {
     updateBudgetAndTotalCosts();//✅ Calculate DURASI_TRIP based on selected dates
     handleUnitKerjaChange(); // ✅ Auto-fill KOTA_UNIT_KERJA based on UNIT_KERJA
 });
+
+// // ✅ Export all functions for use in other files
+// export default {
+//     populateDriverDropdown,
+//     updateStatusDriver,
+//     formatDateForInput,
+//     getLastMonthRange,
+//     restrictTanggalMulai,
+//     restrictTanggalSelesai,
+//     calculateDurasiTrip,
+//     handleHotelSwitcher,
+//     updateBudgetAndTotalCosts,
+//     handleUnitKerjaChange
+// };

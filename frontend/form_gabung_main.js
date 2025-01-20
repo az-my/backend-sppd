@@ -1,4 +1,5 @@
 import { setupFormSubmission } from "./form_gabung_submit.js"; // ✅ Import dynamic submission handler
+import fetchAndRenderTable from "./report_fetchAndRenderTable.js"; // ✅ Use default import
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("🚀 Form Initialized");
@@ -35,6 +36,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     console.log("🚀 Form Ready for Submission");
+
+
+
+    // ✅ Ensure tables exist before fetching data
+    if (document.querySelector("#lemburTable")) {
+        fetchAndRenderTable("lembur", "#lemburTable");
+    }
+
+    if (document.querySelector("#sppdTable")) {
+        fetchAndRenderTable("sppd", "#sppdTable");
+    }
+
+
 
 
 });
