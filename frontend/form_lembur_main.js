@@ -4,7 +4,7 @@ import {
     populateDriverDropdown, autoFillFields,
     populateUnitKerjaDropdown, autoFillUnitKerja,
     calculateTotalJamLembur, calculateTotalJamBayar, calculateTotalBiaya, autoFillUpahPerJam
-} from './form_lembur_script.js';
+} from './form_lembur_sautofill.js';
 
 import { setupFormSubmission } from "./form_gabung_submit.js"; // ✅ Import dynamic submission handler
 import fetchAndRenderTable from "./report_fetchAndRenderTable.js"; // ✅ Use default import
