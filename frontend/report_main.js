@@ -1,5 +1,5 @@
-import { fetchFromApi } from "./utils_apiService.js";
-import { renderTable, renderSummary } from "./utils_renderTable.js"; 
+import { fetchFromApi } from "./report_apiService.js";
+import { renderTable, renderSummary } from "./report_renderTable.js"; 
 
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("🚀 Document Loaded, Fetching Data...");
