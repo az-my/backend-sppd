@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - SPPD & Lembur</title>
+
+    <!-- ✅ Load DaisyUI & Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.0.0/dist/full.css" rel="stylesheet">
+
+    <!-- ✅ Favicon -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+    <style>
+        /* 🔥 Modern Hover Animation */
+        .card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.25);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gray-100">
+
+    <div class="w-full max-w-6xl text-center">
+        <!-- ✅ Title -->
+        <h1 class="text-3xl font-bold mb-6 text-gray-900 flex items-center justify-center">
+            📌 Choose Your Module
+        </h1>
+
+        <!-- ✅ Card Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+
+            <!-- 🔷 SPPD CRUD -->
+            <a href="sppd-crud.html" class="card bg-blue-900 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-blue-800">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2"></path><path d="M21 16v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path><path d="M7 9a5 5 0 1110 0"></path></svg>
+                <h2 class="font-bold text-lg mt-3">SPPD CRUD</h2>
+            </a>
+
+            <!-- 🔷 SPPD Report PLN -->
+            <a href="sppd-report-pln.html" class="card bg-blue-800 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-blue-700">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 10h11a1 1 0 011 1v3a1 1 0 01-1 1H3m6-5v8"></path><path d="M13 16V9a1 1 0 00-1-1H7m5 8h-2"></path></svg>
+                <h2 class="font-bold text-lg mt-3">SPPD Report PLN</h2>
+            </a>
+
+            <!-- 🔷 SPPD Report Kantor -->
+            <a href="sppd-report-kantor.html" class="card bg-blue-700 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-blue-600">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 4h18v16H3z"></path><path d="M7 14h10M7 10h10"></path></svg>
+                <h2 class="font-bold text-lg mt-3">SPPD Report Kantor</h2>
+            </a>
+
+            <!-- 🔷 SPPD Lampiran -->
+            <a href="sppd-lampiran.html" class="card bg-blue-600 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-blue-500">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 7v10M20 7v10"></path><path d="M8 3h8v18H8z"></path></svg>
+                <h2 class="font-bold text-lg mt-3">SPPD Lampiran</h2>
+            </a>
+
+            <!-- 🟢 Lembur CRUD -->
+            <a href="lembur-crud.html" class="card bg-green-900 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-green-800">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8v4l3 3"></path><path d="M12 2a10 10 0 1010 10"></path></svg>
+                <h2 class="font-bold text-lg mt-3">Lembur CRUD</h2>
+            </a>
+
+            <!-- 🟢 Lembur Report PLN -->
+            <a href="lembur-report-pln.html" class="card bg-green-800 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-green-700">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 10h11a1 1 0 011 1v3a1 1 0 01-1 1H3m6-5v8"></path><path d="M13 16V9a1 1 0 00-1-1H7m5 8h-2"></path></svg>
+                <h2 class="font-bold text-lg mt-3">Lembur Report PLN</h2>
+            </a>
+
+            <!-- 🟢 Lembur Report Kantor -->
+            <a href="lembur-report-kantor.html" class="card bg-green-700 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-green-600">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 4h18v16H3z"></path><path d="M7 14h10M7 10h10"></path></svg>
+                <h2 class="font-bold text-lg mt-3">Lembur Report Kantor</h2>
+            </a>
+
+            <!-- 🟢 Lembur Lampiran -->
+            <a href="lembur-lampiran.html" class="card bg-green-600 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-green-500">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 7v10M20 7v10"></path><path d="M8 3h8v18H8z"></path></svg>
+                <h2 class="font-bold text-lg mt-3">Lembur Lampiran</h2>
+            </a>
+
+        </div>
+    </div>
+
+</body>
+</html>
