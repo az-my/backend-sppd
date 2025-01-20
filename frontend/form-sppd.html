@@ -20,7 +20,7 @@
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/localizedFormat.js"></script>
     <!-- ✅ Load Indonesian Locale -->
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/locale/id.js"></script>
-
+    
 </head>
 
 <body class="bg-gray-100 font-sans">
@@ -28,7 +28,7 @@
         <div class="bg-white shadow-md rounded-lg p-6">
             <h2 class="text-xl font-bold mb-4 text-gray-700">Isi Data Mentah SPPD</h2>
 
-            <form id="sppdForm" class="grid gap-4">
+            <form id="sppdForm" class="grid gap-4" data-api="/sppd/create">
                 <!-- 🟢 Manual Entry Fields -->
 
 
@@ -179,7 +179,8 @@
 
     <!-- ✅ Add this before closing </body> -->
     <script src="form_sppd_autofill.js"></script>
-    <script src="form_sppd_submit.js"></script>
+    <script type="module" src="form_gabung_main.js"></script>
+    <!-- <script src="form_sppd_submit.js"></script> -->
     <!-- Include Main.js -->
     <script type="module" src="form_sppd_main.js"></script>
 
