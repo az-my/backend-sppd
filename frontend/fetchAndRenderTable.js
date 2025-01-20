@@ -12,7 +12,7 @@ export default async function fetchAndRenderTable(moduleName, tableSelector) {
     const isLocal = ["localhost", "127.0.0.1"].includes(window.location.hostname);
     const BASE_URL = isLocal 
         ? "http://localhost:3000/api/" 
-        : "https://your-production-api.com/api/";
+        : "https://backend-sppd-production.up.railway.app/api/";
 
     const apiUrl = `${BASE_URL}${moduleName}/read`;
 
