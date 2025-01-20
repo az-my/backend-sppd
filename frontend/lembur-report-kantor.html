@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEMBUR: Rekap Kantor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.4/dist/full.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/id.min.js"></script>
+</head>
+<script src="
+https://cdn.jsdelivr.net/npm/@develoka/angka-terbilang-js@1.4.2/index.min.js
+"></script>
+
+
+<!-- ✅ Main JS -->
+<script type="module" src="utils_main.js"></script>
+
+
+<body data-module="lembur" data-endpoint="report/rekap-kantor"
+    class="bg-white-100 flex flex-col justify-center items-center min-h-screen p-6">
+
+
+
+
+    <!-- Centered Table -->
+    <div id="laporan-wrapper" class="overflow-x-auto w-auto">
+        <div class="font-semibold text-sm mt-1 text-center">
+            <br>REKAPITULASI KERJA LEMBUR OUTSOURCING <br />
+            UPT BANDA ACEH <br><span id="transaction-month" class="uppercase"></span><br>
+        </div>
+        <table id="laporan" class="w-auto mx-auto text-xs">
+            <thead>
+                <tr>
+                    <th colspan=12" class="border-b border-gray-800 px-4 py-2 text-center">
+                    
+                      <div class="font-semibold text-sm mt-1">
+                        JUMLAH SPPD <span id="transaction-month">MONTH</span> DRIVER UPT
+                      </div>
+                    </th>
+                  </tr>
+                <tr class="bg-gray-100 text-center">
+                    <th class="border border-gray-500 px-2 py-1 w-auto">NO</th>
+                    <th class="border border-gray-500 px-2 py-1 w-auto">NAMA DRIVER</th>
+                    <th class="border border-gray-500 px-2 py-1 w-auto">JUMLAH SPPD</th>
+                    <th class="border border-gray-500 px-2 py-1 w-auto">HARI</th>
+                    <th class="border border-gray-500 px-2 py-1 w-auto">KETERANGAN</th>
+                </tr>
+            </thead>
+            <tbody id="data-table-body">
+                <!-- Dynamic content -->
+            </tbody>
+            <tfoot>
+                <tr class="border border-gray-500 px-2 py-1 w-auto">
+                    <td colspan="2" class="border border-gray-500 px-2 py-1 font-bold text-right">JUMLAH</td>
+                    <td class="border border-gray-500 px-2 py-1 font-bold text-right" id="total-amount"></td>
+                    <td colspan="2" class="border border-gray-500 px-2 py-1"></td>
+                </tr>
+                <tr class="italic border border-gray-500 px-2 py-1 w-auto"><td colspan="5" class="border-gray-500 px-2 py-1" id="terbilang"><span>terbilang:</span></td></tr>
+                <tr class="text-center">
+                    <td colspan="5" class="px-4 py-4"><br><br>Banda Aceh, 15 <span id="bulan-masuk-tagihan">MONTH</span></td>
+                </tr>
+                <tr class="text-center">
+                    <td colspan="2" class=" px-4 py-1 font-bold text-left">Dibuat Oleh</td>
+                    <td class=" px-4 py-1 font-bold">Mengetahui</td>
+                    <td colspan="2" class=" px-4 py-1 font-bold text-right">Disetujui</td>
+                </tr>
+                <tr class="text-center">
+                    <td colspan="2" class=" px-4 py-1 text-left"><br><br>Rahmat</td>
+                    <td class=" px-4 py-1"><br><br>Sulistia</td>
+                    <td colspan="2" class="px-4 py-1 text-right"><br><br>Herlina</td>
+                </tr>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+
+</body>
+
+</html>
