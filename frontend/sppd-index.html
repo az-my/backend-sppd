@@ -30,112 +30,128 @@
 
             <form id="sppdForm" class="grid gap-4">
                 <!-- 🟢 Manual Entry Fields -->
-                
-            
-                    <div class="grid gap-6 mb-6 md:grid-cols-4">
-                        <label class="form-control w-full">
-                            <span class="label-text">Nama Driver</span>
-                            <select id="NAMA_DRIVER" name="NAMA_DRIVER" required class="select select-bordered w-full">
-                                <option value="">Pilih Driver</option>
-                            </select>
-                        </label>
-                        <label class="form-control w-full">
-                            <span class="label-text">Maksud Perjalanan</span>
-                            <input id="MAKSUD_PERJALANAN" name="MAKSUD_PERJALANAN" type="text" required class="input input-bordered w-full">
-                        </label>
-                        <label class="form-control w-full">
-                            <span class="label-text">Alat Angkutan</span>
-                            <input id="ALAT_ANGKUTAN" name="ALAT_ANGKUTAN" type="text" required class="input input-bordered w-full">
-                        </label>
-                        <label class="form-control w-full">
-                            <span class="label-text">Kota Tujuan</span>
-                            <input id="KOTA_TUJUAN" name="KOTA_TUJUAN" type="text" required class="input input-bordered w-full">
-                        </label>
-                    </div>
-            
-                    <div class="grid gap-6 mb-6 md:grid-cols-6">
-                        <label class="form-control w-full">
-                            <span class="label-text">Tanggal Mulai</span>
-                            <input id="TANGGAL_MULAI" name="TANGGAL_MULAI" type="date" required class="input input-bordered w-full">
-                        </label>
-                        <label class="form-control w-full">
-                            <span class="label-text">Tanggal Selesai</span>
-                            <input id="TANGGAL_SELESAI" name="TANGGAL_SELESAI" type="date" required class="input input-bordered w-full">
-                        </label>
-                        <div class="form-control w-full flex flex-row items-center gap-2">
-                            <span class="label-text">Hotel</span>
-                            <input id="HOTEL" name="HOTEL" type="checkbox" class="toggle toggle-primary">
-                        </div>
-                        <input id="HOTEL_STATUS" name="HOTEL_STATUS" type="hidden" value="No">
-                        <label class="form-control w-full">
-                            <span class="label-text">Unit Kerja</span>
-                            <select required id="UNIT_KERJA" name="UNIT_KERJA" class="select select-bordered w-full">
-                                <option value="">Pilih Unit Kerja</option>
-                                <option value="UPT Banda Aceh">UPT Banda Aceh</option>
-                                <option value="ULTG Banda Aceh">ULTG Banda Aceh</option>
-                                <option value="ULTG Meulaboh">ULTG Meulaboh</option>
-                                <option value="ULTG Langsa">ULTG Langsa</option>
-                            </select>
-                        </label>
-                        <label class="form-control w-full">
-                            <span class="label-text">Nama Pejabat Pemberi Tugas</span>
-                            <input id="NAMA_PEMBERI_TUGAS" name="NAMA_PEMBERI_TUGAS" type="text" required class="input input-bordered w-full">
-                        </label>
-                        <label class="form-control w-full">
-                            <span class="label-text">Jabatan Pejabat Pemberi Tugas</span>
-                            <input id="JABATAN_PEMBERI_TUGAS" name="JABATAN_PEMBERI_TUGAS" type="text" required class="input input-bordered w-full">
-                        </label>
-                    </div>
-               
-            
-                <!-- 🔵 Auto-Fill Fields -->
-                                   <!-- ✅ Divider -->
-                                   <div class="border-t-4 border-primary bg-base-100 pt-4"></div>
 
-                    
-                    <div class="grid gap-6 mb-6 md:grid-cols-9">
-                        <label class="form-control w-full">
-                            <span class="label-text">Status Driver</span>
-                            <input id="STATUS_DRIVER" name="STATUS_DRIVER" type="text"  readonly class="input input-bordered w-full">
-                        </label>
-                        <label class="form-control w-full">
-                            <span class="label-text">Kota Unit Kerja</span>
-                            <input id="KOTA_UNIT_KERJA" name="KOTA_UNIT_KERJA" type="text"  readonly class="input input-bordered w-full">
-                        </label>
-                        <label class="form-control w-full">
-                            <span class="label-text">Durasi Trip (hari)</span>
-                            <input id="DURASI_TRIP" name="DURASI_TRIP" type="text"  readonly class="input input-bordered  w-full">
-                        </label>
-                        <label class="form-control w-full">
-                            <span class="label-text">Durasi Inap (hari)</span>
-                            <input id="DURASI_INAP" name="DURASI_INAP" type="text"  readonly class="input  input-bordered w-full">
-                        </label>
-                        <label class="form-control w-full">
-                            <span class="label-text">Budget Biaya Harian</span>
-                            <input id="BUDGET_BIAYA_HARIAN" name="BUDGET_BIAYA_HARIAN" readonly type="text"  class="input input-bordered w-full">
-                        </label>
-                        <label class="form-control w-full">
-                            <span class="label-text">Budget Hotel</span>
-                            <input id="BUDGET_HOTEL" name="BUDGET_HOTEL" type="text"  readonly class="input input-bordered w-full">
-                        </label>
-                        <label class="form-control w-full">
-                            <span class="label-text">Total Biaya Harian</span>
-                            <input id="TOTAL_BIAYA_HARIAN" name="TOTAL_BIAYA_HARIAN" type="text"  readonly class="input  input-bordered w-full">
-                        </label>
-                        <label class="form-control w-full">
-                            <span class="label-text">Total Biaya HOTEL</span>
-                            <input id="TOTAL_BIAYA_PENGINAPAN" name="TOTAL_BIAYA_PENGINAPAN" type="text"  readonly class="input input-bordered  w-full">
-                        </label>
-                        <label class="form-control w-full">
-                            <span class="label-text">Total Biaya SPPD</span>
-                            <input id="TOTAL_BIAYA_SPPD" name="TOTAL_BIAYA_SPPD" type="text"  readonly class="input input-bordered  w-full">
-                        </label>
+
+                <div class="grid gap-6 mb-6 md:grid-cols-4">
+                    <label class="form-control w-full">
+                        <span class="label-text">Nama Driver</span>
+                        <select id="NAMA_DRIVER" name="NAMA_DRIVER" required class="select select-bordered w-full">
+                            <option value="">Pilih Driver</option>
+                        </select>
+                    </label>
+                    <label class="form-control w-full">
+                        <span class="label-text">Maksud Perjalanan</span>
+                        <input id="MAKSUD_PERJALANAN" name="MAKSUD_PERJALANAN" type="text" required
+                            class="input input-bordered w-full">
+                    </label>
+                    <label class="form-control w-full">
+                        <span class="label-text">Alat Angkutan</span>
+                        <input id="ALAT_ANGKUTAN" name="ALAT_ANGKUTAN" type="text" required
+                            class="input input-bordered w-full">
+                    </label>
+                    <label class="form-control w-full">
+                        <span class="label-text">Kota Tujuan</span>
+                        <input id="KOTA_TUJUAN" name="KOTA_TUJUAN" type="text" required
+                            class="input input-bordered w-full">
+                    </label>
+                </div>
+
+                <div class="grid gap-6 mb-6 md:grid-cols-6">
+                    <label class="form-control w-full">
+                        <span class="label-text">Tanggal Mulai</span>
+                        <input id="TANGGAL_MULAI" name="TANGGAL_MULAI" type="date" required
+                            class="input input-bordered w-full">
+                    </label>
+                    <label class="form-control w-full">
+                        <span class="label-text">Tanggal Selesai</span>
+                        <input id="TANGGAL_SELESAI" name="TANGGAL_SELESAI" type="date" required
+                            class="input input-bordered w-full">
+                    </label>
+                    <div class="form-control w-full flex flex-row items-center gap-2">
+                        <span class="label-text">Hotel</span>
+                        <input id="HOTEL" name="HOTEL" type="checkbox" class="toggle toggle-primary">
                     </div>
-                
-                
+                    <input id="HOTEL_STATUS" name="HOTEL_STATUS" type="hidden" value="No">
+                    <label class="form-control w-full">
+                        <span class="label-text">Unit Kerja</span>
+                        <select required id="UNIT_KERJA" name="UNIT_KERJA" class="select select-bordered w-full">
+                            <option value="">Pilih Unit Kerja</option>
+                            <option value="UPT Banda Aceh">UPT Banda Aceh</option>
+                            <option value="ULTG Banda Aceh">ULTG Banda Aceh</option>
+                            <option value="ULTG Meulaboh">ULTG Meulaboh</option>
+                            <option value="ULTG Langsa">ULTG Langsa</option>
+                        </select>
+                    </label>
+                    <label class="form-control w-full">
+                        <span class="label-text">Nama Pejabat Pemberi Tugas</span>
+                        <input id="NAMA_PEMBERI_TUGAS" name="NAMA_PEMBERI_TUGAS" type="text" required
+                            class="input input-bordered w-full">
+                    </label>
+                    <label class="form-control w-full">
+                        <span class="label-text">Jabatan Pejabat Pemberi Tugas</span>
+                        <input id="JABATAN_PEMBERI_TUGAS" name="JABATAN_PEMBERI_TUGAS" type="text" required
+                            class="input input-bordered w-full">
+                    </label>
+                </div>
+
+
+                <!-- 🔵 Auto-Fill Fields -->
+                <!-- ✅ Divider -->
+                <div class="border-t-4 border-primary bg-base-100 pt-4"></div>
+
+
+                <div class="grid gap-6 mb-6 md:grid-cols-9">
+                    <label class="form-control w-full">
+                        <span class="label-text">Status Driver</span>
+                        <input id="STATUS_DRIVER" name="STATUS_DRIVER" type="text" readonly
+                            class="input input-bordered w-full">
+                    </label>
+                    <label class="form-control w-full">
+                        <span class="label-text">Kota Unit Kerja</span>
+                        <input id="KOTA_UNIT_KERJA" name="KOTA_UNIT_KERJA" type="text" readonly
+                            class="input input-bordered w-full">
+                    </label>
+                    <label class="form-control w-full">
+                        <span class="label-text">Durasi Trip (hari)</span>
+                        <input id="DURASI_TRIP" name="DURASI_TRIP" type="text" readonly
+                            class="input input-bordered  w-full">
+                    </label>
+                    <label class="form-control w-full">
+                        <span class="label-text">Durasi Inap (hari)</span>
+                        <input id="DURASI_INAP" name="DURASI_INAP" type="text" readonly
+                            class="input  input-bordered w-full">
+                    </label>
+                    <label class="form-control w-full">
+                        <span class="label-text">Budget Biaya Harian</span>
+                        <input id="BUDGET_BIAYA_HARIAN" name="BUDGET_BIAYA_HARIAN" readonly type="text"
+                            class="input input-bordered w-full">
+                    </label>
+                    <label class="form-control w-full">
+                        <span class="label-text">Budget Hotel</span>
+                        <input id="BUDGET_HOTEL" name="BUDGET_HOTEL" type="text" readonly
+                            class="input input-bordered w-full">
+                    </label>
+                    <label class="form-control w-full">
+                        <span class="label-text">Total Biaya Harian</span>
+                        <input id="TOTAL_BIAYA_HARIAN" name="TOTAL_BIAYA_HARIAN" type="text" readonly
+                            class="input  input-bordered w-full">
+                    </label>
+                    <label class="form-control w-full">
+                        <span class="label-text">Total Biaya HOTEL</span>
+                        <input id="TOTAL_BIAYA_PENGINAPAN" name="TOTAL_BIAYA_PENGINAPAN" type="text" readonly
+                            class="input input-bordered  w-full">
+                    </label>
+                    <label class="form-control w-full">
+                        <span class="label-text">Total Biaya SPPD</span>
+                        <input id="TOTAL_BIAYA_SPPD" name="TOTAL_BIAYA_SPPD" type="text" readonly
+                            class="input input-bordered  w-full">
+                    </label>
+                </div>
+
+
                 <button type="submit" id="submitBtn" class="btn btn-primary w-full md:w-auto">Submit</button>
             </form>
-            
+
         </div>
     </div>
 
