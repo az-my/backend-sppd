@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     for (const record of data) {
         const recordContainer = document.createElement("div");
-        recordContainer.classList.add("record-group", "mb-10", "border", "border-black", "p-4", "rounded-lg");
+        recordContainer.classList.add("record-group", "border", "border-gray", "p-4", "rounded-lg");
 
         recordContainer.id = `record-${record.UUID}`;
         reportContainer.appendChild(recordContainer);
