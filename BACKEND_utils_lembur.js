@@ -119,12 +119,21 @@ const parseDate = (dateStr) => {
 /**
  * ✅ Generate BULAN_TRANSAKSI and BULAN_MASUK_TAGIHAN from TANGGAL_MULAI
  */
-const getMonthNames = (dateStr) => {
-    // ✅ Ensure dateStr is properly formatted (yyyy-mm-dd)
-    const [year, month, day] = dateStr.split('-').map(Number);
+// const dayjs = require("dayjs"); // Ensure dayjs is imported
 
-    // ✅ Create a Date object
-    const date = new Date(year, month - 1, day);
+const getMonthNames = (dateStr) => {
+    if (!dateStr) {
+        console.error("❌ getMonthNames received an invalid date:", dateStr);
+        return { bulanTransaksi: "Invalid Date", bulanMasukTagihan: "Invalid Date" };
+    }
+
+    // ✅ Parse date using dayjs (Handles YYYY-MM-DD format)
+    const parsedDate = dayjs(dateStr, ["YYYY-MM-DD", "DD/MM/YYYY"], true);
+
+    if (!parsedDate.isValid()) {
+        console.error("❌ Invalid date format for getMonthNames:", dateStr);
+        return { bulanTransaksi: "Invalid Date", bulanMasukTagihan: "Invalid Date" };
+    }
 
     // ✅ Month names in Bahasa Indonesia
     const monthNames = [
@@ -132,12 +141,18 @@ const getMonthNames = (dateStr) => {
         "Juli", "Agustus", "September", "Oktober", "November", "Desember"
     ];
 
-    // ✅ Extract proper values
-    const bulanTransaksi = `${monthNames[month - 1]} ${year}`;
-    const bulanMasukTagihan = `${monthNames[(month % 12)]} ${month === 12 ? year + 1 : year}`;
+    // ✅ Extract month and year
+    const month = parsedDate.month(); // 0-indexed (January = 0)
+    const year = parsedDate.year();
+
+    const bulanTransaksi = `${monthNames[month]} ${year}`;
+    const bulanMasukTagihan = `${monthNames[(month + 1) % 12]} ${month === 11 ? year + 1 : year}`;
 
     return { bulanTransaksi, bulanMasukTagihan };
 };
+
+
+
 
 /**
  * ✅ Sorting Logic:

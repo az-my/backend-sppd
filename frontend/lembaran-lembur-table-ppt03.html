@@ -1,0 +1,52 @@
+<div id="record-{{UUID}}-fppt-03" class="mb-6 border border-black rounded-lg p-4">
+
+    <div class="flex justify-between items-start text-xs mb-0">
+        <div>
+            <p class="font-bold">PT PLN (PERSERO)</p>
+            <p>UPT Banda Aceh</p>
+        </div>
+        <div class="border border-black px-4 py-2 text-black font-bold text-xs">
+            Form FPPT-03
+        </div>
+    </div>
+
+    <h2 class="text-xs font-semibold text-center mb-0">FORMULIR KONFIRMASI PEKERJAAN TAMBAH</h2>
+
+    <!-- Display the recipient's name dynamically -->
+    <p class="text-xs font-bold text-left mb-2">
+        Kepada Yth<br>
+        <span class="text-black">{{NAMA_DRIVER}}</span>
+    </p>
+
+    <p class="text-xs mb-0">
+        Menunjuk Perjanjian Nomor : 0001.PJ/DAN.02.07/UPTBAC/2020 dan sehubungan dengan rencana
+        kegiatan yang akan dilaksanakan diluar jam kerja, maka Saudara ditugaskan untuk melakukan kegiatan/
+        pekerjaan dimaksud pada:
+    </p>
+
+    <table style="font-size: 0.7rem; border-collapse: collapse; table-layout: fixed;">
+        <tbody>
+            <tr><td>1. Hari, Tgl. Mulai</td><td>: {{HARI_MULAI}}, {{TANGGAL_MULAI}}</td></tr>
+            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;s/d Hari, Tgl. Akhir</td><td>: {{HARI_SELESAI}}, {{TANGGAL_SELESAI}}</td></tr>
+            <tr><td>3. Waktu Mulai s/d</td><td>: {{JAM_MULAI}} s/d {{JAM_SELESAI}}</td></tr>
+            <tr><td>4. Durasi</td><td>: {{TOTAL_JAM_LEMBUR}} Jam</td></tr>
+            <tr><td>5. Untuk Kegiatan</td><td>: {{URAIAN_PEKERJAAN}}</td></tr>
+            <tr><td colspan="2">Demikian dan terima kasih atas kerjasamanya.</td></tr>
+        </tbody>
+    </table>
+
+    <div class="flex justify-between text-xs">
+        <div class="text-left">
+            <p>Mengetahui,</p>
+            <p>TL ADM & UMUM</p>
+            <p class="font-semibold mt-6">{{NAMA_FORM_1}}</p>
+        </div>
+        <div class="text-right">
+            <p>Banda Aceh, {{TANGGAL_MULAI}}</p>
+            <p>Yang Menugaskan/ Memerintahkan,</p>
+            <p>DIREKTUR</p>
+            <p>KSO PT PALMA NAFINDO PRATAMA - PT SANOBAR GUNAJAYA</p>
+            <p class="font-semibold mt-6">{{NAMA_FORM_2}}</p>
+        </div>
+    </div>
+</div>
