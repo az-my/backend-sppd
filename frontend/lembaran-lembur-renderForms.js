@@ -39,9 +39,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 /**
  * ✅ Replace placeholders with actual data from API response.
+ * ✅ If a value is in `YYYY-MM-DD` format, reformat it to `DD MMMM YYYY` (Indonesian format).
  */
+// Load Indonesian locale explicitly
+moment.locale('id'); // ✅ Force Moment.js to use Indonesian
+
 const fillTemplate = (template, data) => {
     return template.replace(/\{\{(\w+)\}\}/g, (_, key) => {
-        return data[key] !== undefined ? data[key] : "-";
+        let value = data[key];
+
+        // ✅ Check if value matches YYYY-MM-DD and format it in Indonesian
+        if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+            return moment(value).format('DD MMMM YYYY'); // ✅ Now in Indonesian format
+        }
+
+        return value !== undefined ? value : "-"; // ✅ Return original value if not a date
     });
 };
