@@ -98,7 +98,15 @@ const headerMappings = {
             "KOTA_TUJUAN": "TUJUAN",
             "TOTAL_BIAYA_BAYAR": "JUMLAH",
             "DURASI_TRIP": "KET."
+        },
+        "report/rekap-kantor": {
+            "NAMA_DRIVER": "NAMA DRIVER",
+            
+            "JUMLAH_TRANSAKSI": "JUMLAH SPPD",
+            "TOTAL_BIAYA_BAYAR": "JUMLAH BIAYA SPPD",
+            "DURASI_TRIP": "KET."
         }
+
     },
     "lembur": {
         "report/rekap-pln": {
@@ -111,6 +119,12 @@ const headerMappings = {
             "UPAH_PER_JAM": "UPAH LEMBUR SEJAM",
             "TOTAL_BIAYA_BAYAR": "BIAYA YANG DIBAYARKAN",
             "STATUS_HARI_MULAI":"KET."
+        },
+        "report/rekap-kantor": {
+
+            "NAMA_DRIVER": "NAMA DRIVER",
+            "TOTAL_BIAYA_BAYAR": "JUMLAH BIAYA LEMBUR",
+            "JUMLAH_TRANSAKSI":"JUMLAH LEMBUR"
         }
     }
 };
@@ -253,44 +267,51 @@ export function renderSummary(summary, endpoint, moduleName) {
         return;
     }
 
-    // ✅ Map API summary keys to their corresponding <td> IDs
-    const summaryMapping = {
-        "TOTAL_BIAYA_BAYAR": "total-amount",
-        "ADMIN_FEE": "total-biaya-admin",
-        "TOTAL_TAGIHAN_WITH_ADMIN": "total-tagihan-without-tax",
-        "TOTAL_TAGIHAN_WITH_TAX": "total-final-invoice",
-        "TAX": "total-ppn",
-        "BULAN_TRANSAKSI": "transaction-month",
-        "BULAN_MASUK_TAGIHAN": "bulan-masuk-tagihan"
-    };
+  // ✅ Get today's date in Indonesian format (e.g., "25 Januari 2024")
+const todayDate = moment().locale("id").format("DD");
 
-    // ✅ Fields that should have thousand separators
-    const formattedFields = [
-        "TOTAL_BIAYA_BAYAR",
-        "ADMIN_FEE",
-        "TOTAL_TAGIHAN_WITH_ADMIN",
-        "TOTAL_TAGIHAN_WITH_TAX",
-        "TAX"
-    ];
+// ✅ Map API summary keys to their corresponding <td> IDs
+const summaryMapping = {
+    "TOTAL_BIAYA_BAYAR": "total-amount",
+    "ADMIN_FEE": "total-biaya-admin",
+    "TOTAL_TAGIHAN_WITH_ADMIN": "total-tagihan-without-tax",
+    "TOTAL_TAGIHAN_WITH_TAX": "total-final-invoice",
+    "TAX": "total-ppn",
+    "BULAN_TRANSAKSI": "transaction-month",
+    "BULAN_MASUK_TAGIHAN": "bulan-masuk-tagihan"
+};
 
-    // ✅ Loop through the mapping & update elements
-    Object.entries(summaryMapping).forEach(([apiKey, tdId]) => {
-        const elements = document.querySelectorAll(`#${tdId}`);
+// ✅ Fields that should have thousand separators
+const formattedFields = [
+    "TOTAL_BIAYA_BAYAR",
+    "ADMIN_FEE",
+    "TOTAL_TAGIHAN_WITH_ADMIN",
+    "TOTAL_TAGIHAN_WITH_TAX",
+    "TAX"
+];
 
-        if (elements.length > 0) {
-            elements.forEach(el => {
-                let value = summary[apiKey] ?? "-"; // Use raw value if available
+// ✅ Loop through the mapping & update elements
+Object.entries(summaryMapping).forEach(([apiKey, tdId]) => {
+    const elements = document.querySelectorAll(`#${tdId}`);
 
-                // ✅ Apply thousand separator for formatted fields, otherwise render as-is
-                if (formattedFields.includes(apiKey) && !isNaN(value) && value !== "-") {
-                    value = new Intl.NumberFormat("id-ID").format(Number(value)); // Add thousand separator
-                }
+    if (elements.length > 0) {
+        elements.forEach(el => {
+            let value = summary[apiKey] ?? "-"; // Use raw value if available
 
-                el.textContent = value; // Render the value
-            });
-        }
-    });
+            // ✅ Apply thousand separator for formatted fields
+            if (formattedFields.includes(apiKey) && !isNaN(value) && value !== "-") {
+                value = new Intl.NumberFormat("id-ID").format(Number(value));
+            }
 
+            // ✅ Add today's date prefix for "bulan-masuk-tagihan"
+            if (apiKey === "BULAN_MASUK_TAGIHAN" && value !== "-") {
+                value = `${todayDate} ${value}`; // Prefix today's day to the value
+            }
+
+            el.textContent = value; // Render the value
+        });
+    }
+});
 
 
     // ✅ Convert TOTAL_TAGIHAN_WITH_TAX to Terbilang (if available)
