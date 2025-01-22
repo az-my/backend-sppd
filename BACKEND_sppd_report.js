@@ -6,7 +6,7 @@ const { Parser } = require('json2csv');
 
 const router = express.Router();
 const SHEET_NAME = 'UJICOBA_SPPD';
-
+const numeral = require("numeral");
 /**
  * ✅ Generate Report (Reusable for All Report Types)
  * @param {string} reportType - "rekap-kantor", "rekap-pln", "lembar-satuan"
@@ -46,34 +46,69 @@ const generateReport = async (reportType, req, res) => {
         let totalDurationInap = 0;
 
         detailedRecords.forEach(row => {
+            const parseLocalizedNumber = (str) => {
+                if (!str) return 0; // Handle null, undefined, or empty values
+                const normalized = str.replace(/\./g, "").replace(",", ".");
+                return parseFloat(normalized) || 0;
+            };
+        
             const driver = row["NAMA_DRIVER"];
-            const biayaSPPD = parseFloat((row["TOTAL_BIAYA_SPPD"] || "0").replace(/\./g, '').replace(',', '.')) || 0;
+            console.log("Raw TOTAL_BIAYA_BAYAR:", row["TOTAL_BIAYA_BAYAR"]); // Debugging raw values
+        
+            // ✅ List all financial fields that need conversion
+            const financialFields = [
+                "TOTAL_BIAYA_BAYAR",
+                "TOTAL_BIAYA_PENGINAPAN",
+                "TOTAL_BIAYA_HARIAN",
+                "BUDGET_BIAYA_HARIAN",
+                "BUDGET_HOTEL"
+            ];
+        
+            // ✅ Convert each financial field
+            financialFields.forEach(field => {
+                if (row[field]) {
+                    row[field] = parseLocalizedNumber(row[field]); // Convert and override the value
+                }
+            });
+        
+            // ✅ Convert DURASI_INAP safely
             const durasiInap = parseFloat((row["DURASI_INAP"] || "0").replace(/\./g, '').replace(',', '.')) || 0;
-
+        
+            console.log(`Parsed TOTAL_BIAYA_BAYAR: ${row["TOTAL_BIAYA_BAYAR"]}`);
+        
+            // ✅ Initialize driver-based grouping
             if (!groupedData[driver]) {
                 groupedData[driver] = {
                     NAMA_DRIVER: driver,
                     JUMLAH_TRANSAKSI: 0,
-                    TOTAL_BIAYA_SPPD: 0,
+                    TOTAL_BIAYA_BAYAR: 0,
+                    TOTAL_BIAYA_PENGINAPAN: 0,
+                    TOTAL_BIAYA_HARIAN: 0,
+                    BUDGET_BIAYA_HARIAN: 0,
+                    BUDGET_HOTEL: 0,
                     TOTAL_DURASI_INAP: 0
                 };
             }
-
-            // ✅ Accumulate per driver
+        
+            // ✅ Accumulate values per driver
             groupedData[driver].JUMLAH_TRANSAKSI += 1;
-            groupedData[driver].TOTAL_BIAYA_SPPD += biayaSPPD;
+            groupedData[driver].TOTAL_BIAYA_BAYAR += row["TOTAL_BIAYA_BAYAR"];
+            groupedData[driver].TOTAL_BIAYA_PENGINAPAN += row["TOTAL_BIAYA_PENGINAPAN"];
+            groupedData[driver].TOTAL_BIAYA_HARIAN += row["TOTAL_BIAYA_HARIAN"];
+            groupedData[driver].BUDGET_BIAYA_HARIAN += row["BUDGET_BIAYA_HARIAN"];
+            groupedData[driver].BUDGET_HOTEL += row["BUDGET_HOTEL"];
             groupedData[driver].TOTAL_DURASI_INAP += durasiInap;
-
-            // ✅ Accumulate for grand total
+        
+            // ✅ Accumulate for grand totals
             totalTransactions += 1;
-            totalSPPD += biayaSPPD;
+            totalSPPD += row["TOTAL_BIAYA_BAYAR"];
             totalDurationInap += durasiInap;
         });
-
+        
         // ✅ Convert grouped data into an array format
         const aggregatedByDriver = Object.values(groupedData).map(group => ({
             ...group,
-            TOTAL_BIAYA_SPPD: group.TOTAL_BIAYA_SPPD.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
+            TOTAL_BIAYA_BAYAR: Math.trunc(numeral(group.TOTAL_BIAYA_BAYAR).value()),
             TOTAL_DURASI_INAP: group.TOTAL_DURASI_INAP.toFixed(2)
         }));
 
@@ -83,15 +118,23 @@ const totalTagihanWithAdmin = totalSPPD + adminFee;
 const tax = totalTagihanWithAdmin * 0.11;
 const totalTagihanWithTax = totalTagihanWithAdmin + tax;
 
+// ✅ Extract BULAN_TRANSAKSI and BULAN_MASUK_TAGIHAN from detailed records
+const latestBulanTransaksi = detailedRecords[0]?.BULAN_TRANSAKSI || "N/A";
+const latestBulanMasukTagihan = detailedRecords[0]?.BULAN_MASUK_TAGIHAN || "N/A";
+
+
 // ✅ Create overall summary (including missing TOTAL_TAGIHAN_WITH_TAX)
 const overallTotals = {
     TOTAL_TRANSACTIONS: totalTransactions,
-    TOTAL_BIAYA_SPPD: totalSPPD.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
+    // TOTAL_BIAYA_BAYAR: totalSPPD.toLocaleString('id-ID', { minimumFractionDigits: 0 }),
+     TOTAL_BIAYA_BAYAR: Math.trunc(numeral(totalSPPD).value()),
     TOTAL_DURASI_INAP: totalDurationInap.toFixed(2),
-    ADMIN_FEE: adminFee.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
-    TOTAL_TAGIHAN_WITH_ADMIN: totalTagihanWithAdmin.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
-    TAX: tax.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
-    TOTAL_TAGIHAN_WITH_TAX: totalTagihanWithTax.toLocaleString('id-ID', { minimumFractionDigits: 2 }) // ✅ Fix missing key
+    ADMIN_FEE: Math.trunc(numeral(adminFee).value()),
+    TOTAL_TAGIHAN_WITH_ADMIN: Math.trunc(numeral(totalTagihanWithAdmin).value()),
+    TAX: Math.trunc(numeral(tax).value()),
+    TOTAL_TAGIHAN_WITH_TAX: Math.trunc(numeral(totalTagihanWithTax).value()), // ✅ Fix missing key
+    BULAN_TRANSAKSI: latestBulanTransaksi, // ✅ Include BULAN_TRANSAKSI
+    BULAN_MASUK_TAGIHAN: latestBulanMasukTagihan // ✅ Include BULAN_MASUK_TAGIHAN
 };
 
         // ✅ JSON Response (Unified format)

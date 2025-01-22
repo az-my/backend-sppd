@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ✅ Render summary if available
     if (apiResponse.overall_totals) {
         console.log("📊 Rendering Summary...");
-        renderSummary(apiResponse.overall_totals);
+        renderSummary(apiResponse.overall_totals, endpoint, moduleName);
     } else {
         console.warn("⚠️ No summary data available.");
     }

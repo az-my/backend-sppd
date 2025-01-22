@@ -360,9 +360,9 @@ export const calculateTotalBiaya = () => {
     }
 
     const totalBiaya = totalJamBayar * UPAH_PER_JAM;
-    totalBiayaInput.value = totalBiaya.toFixed(2); // ✅ Default format, keeping decimals
+    totalBiayaInput.value = totalBiaya.toFixed(0); // ✅ Default format, keeping decimals
 
-    console.log(`✅ Total Biaya: ${totalBiaya.toFixed(2)}`);
+    console.log(`✅ Total Biaya: ${totalBiaya.toFixed(0)}`);
 };
 
 

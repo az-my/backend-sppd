@@ -6,6 +6,7 @@ const { Parser } = require('json2csv');
 
 const router = express.Router();
 const SHEET_NAME = 'UJICOBA_LEMBUR';
+const numeral = require("numeral");
 // const dayjs = require("dayjs"); // Ensure dayjs is imported
 
 /**
@@ -82,68 +83,111 @@ const generateReport = async (reportType, req, res) => {
         // ✅ Initialize grouping and summary calculations
         const groupedData = {};
         let totalTransactions = 0;
-        let totalSPPD = 0;
-        let totalDurationInap = 0;
+        let totalBiayaLembur = 0;
+        let totalDurationLemburr = 0;
 
-        detailedRecords.forEach(row => {
-            const driver = row["NAMA_DRIVER"];
-            const biayaSPPD = parseFloat((row["TOTAL_BIAYA"] || "0").replace(/\./g, '').replace(',', '.')) || 0;
-           
-            // const durasiInap = parseFloat((row["TOTAL_JAM_LEMBUR"] || "0").replace(/\./g, '').replace(',', '.')) || 0;
-            const durasiInap = 0;
-            if (!groupedData[driver]) {
-                groupedData[driver] = {
-                    NAMA_DRIVER: driver,
-                    JUMLAH_TRANSAKSI: 0,
-                    TOTAL_BIAYA_SPPD: 0,
-                    TOTAL_DURASI_INAP: 0
-                };
-            }
+        
 
-            // ✅ Accumulate per driver
-            groupedData[driver].JUMLAH_TRANSAKSI += 1;
-            groupedData[driver].TOTAL_BIAYA_SPPD += biayaSPPD;
-            groupedData[driver].TOTAL_DURASI_INAP += durasiInap;
+        
 
-            // ✅ Accumulate for grand total
-            totalTransactions += 1;
-            totalSPPD += biayaSPPD;
-            totalDurationInap += durasiInap;
-        });
+        // const numeral = require("numeral");
 
+detailedRecords.forEach(row => {
+    const parseLocalizedNumber = (str) => {
+        if (!str) return 0; // Handle null, undefined, or empty values
+        return numeral(str).value() || 0; // Use numeral.js for correct parsing
+    };
+
+    const driver = row["NAMA_DRIVER"];
+
+    // ✅ Ensure "UPAH_PER_JAM" is an integer
+    if (row["UPAH_PER_JAM"]) {
+        row["UPAH_PER_JAM"] = Math.trunc(parseLocalizedNumber(row["UPAH_PER_JAM"]));
+    }
+
+    // ✅ Remove thousand separator from "TOTAL_BIAYA_BAYAR" (convert to plain number)
+    if (row["TOTAL_BIAYA_BAYAR"]) {
+        row["TOTAL_BIAYA_BAYAR"] = parseInt(row["TOTAL_BIAYA_BAYAR"].replace(/\./g, ''), 10); // Remove thousand separator and convert to integer
+    }
+
+    // ✅ Ensure "TOTAL_JAM_BAYAR" allows only 1 decimal place
+    if (row["TOTAL_JAM_BAYAR"]) {
+        row["TOTAL_JAM_BAYAR"] = parseFloat(parseLocalizedNumber(row["TOTAL_JAM_BAYAR"]).toFixed(1));
+    }
+
+    // ✅ Ensure "TOTAL_JAM_LEMBUR" allows only 1 decimal place
+    if (row["TOTAL_JAM_LEMBUR"]) {
+        row["TOTAL_JAM_LEMBUR"] = parseFloat(parseLocalizedNumber(row["TOTAL_JAM_LEMBUR"]).toFixed(1));
+    }
+
+    const biayaLembur = row["TOTAL_BIAYA_BAYAR"]; // Keep as original format
+
+    const durasiLembur = 0; // Adjust if needed
+
+    if (!groupedData[driver]) {
+        groupedData[driver] = {
+            NAMA_DRIVER: driver,
+            JUMLAH_TRANSAKSI: 0,
+            TOTAL_BIAYA_BAYAR: 0,
+            TOTAL_DURASI_LEMBUR: 0
+        };
+    }
+
+    // ✅ Accumulate per driver
+    groupedData[driver].JUMLAH_TRANSAKSI += 1;
+    groupedData[driver].TOTAL_BIAYA_BAYAR += biayaLembur;
+    groupedData[driver].TOTAL_DURASI_LEMBUR += durasiLembur;
+
+    // ✅ Accumulate for grand total
+    totalTransactions += 1;
+    totalBiayaLembur += biayaLembur;
+    totalDurationLemburr += durasiLembur;
+});
+
+        
+        
+        
         // ✅ Convert grouped data into an array format
         const aggregatedByDriver = Object.values(groupedData).map(group => ({
             ...group,
-            TOTAL_BIAYA_SPPD: group.TOTAL_BIAYA_SPPD.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
-            TOTAL_DURASI_INAP: group.TOTAL_DURASI_INAP.toFixed(2)
+            TOTAL_BIAYA_BAYAR: Math.trunc(numeral(group.TOTAL_BIAYA_BAYAR).value()),
+            // Math.trunc(numeral(group.TOTAL_BIAYA_BAYAR).value()),
+            TOTAL_DURASI_LEMBUR: group.TOTAL_DURASI_LEMBUR.toFixed(2)
         }));
 
-        // ✅ Calculate Admin Fee, Total Tagihan with Admin, Tax, and Final Total
-        const adminFee = totalSPPD * 0.05;
-        const totalTagihanWithAdmin = totalSPPD + adminFee;
-        const tax = totalTagihanWithAdmin * 0.11;
-        const totalTagihanWithTax = totalTagihanWithAdmin + tax;
+      // ✅ Calculate Admin Fee, Total Tagihan with Admin, Tax, and Final Total
+const adminFee = Math.trunc(numeral(totalBiayaLembur * 0.05).value());
+const totalTagihanWithAdmin = Math.trunc(numeral(totalBiayaLembur + adminFee).value());
+const tax = Math.trunc(numeral(totalTagihanWithAdmin * 0.11).value());
+const totalTagihanWithTax = Math.trunc(numeral(totalTagihanWithAdmin + tax).value());
 
-        // ✅ Create overall summary
-        const overallTotals = {
-            TOTAL_TRANSACTIONS: totalTransactions,
-            TOTAL_BIAYA_SPPD: totalSPPD.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
-            TOTAL_DURASI_INAP: totalDurationInap.toFixed(2),
-            ADMIN_FEE: adminFee.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
-            TOTAL_TAGIHAN_WITH_ADMIN: totalTagihanWithAdmin.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
-            TAX: tax.toLocaleString('id-ID', { minimumFractionDigits: 2 }),
-            TOTAL_TAGIHAN_WITH_TAX: totalTagihanWithTax.toLocaleString('id-ID', { minimumFractionDigits: 2 })
-        };
+// ✅ Extract BULAN_TRANSAKSI and BULAN_MASUK_TAGIHAN from detailed records
+const latestBulanTransaksi = detailedRecords[0]?.BULAN_TRANSAKSI || "N/A";
+const latestBulanMasukTagihan = detailedRecords[0]?.BULAN_MASUK_TAGIHAN || "N/A";
 
-        // ✅ JSON Response (Unified format)
-        return res.json({
-            message: `✅ Successfully generated ${reportType} report`,
-            column_headers: updatedHeaders,
-            detailed_records: detailedRecords, // Now formatted as an array of objects
-            aggregated_by_driver: aggregatedByDriver,
-            overall_totals: overallTotals,
-            record_count: detailedRecords.length
-        });
+
+// ✅ Create overall summary with integer values (no separators, no decimals)
+const overallTotals = {
+    TOTAL_TRANSACTIONS: Math.trunc(numeral(totalTransactions).value()),
+    TOTAL_BIAYA_BAYAR: Math.trunc(numeral(totalBiayaLembur).value()),
+    TOTAL_DURASI_LEMBUR: Math.trunc(numeral(totalDurationLemburr).value()),
+    ADMIN_FEE: Math.trunc(numeral(adminFee).value()),
+    TOTAL_TAGIHAN_WITH_ADMIN: Math.trunc(numeral(totalTagihanWithAdmin).value()),
+    TAX: Math.trunc(numeral(tax).value()),
+    TOTAL_TAGIHAN_WITH_TAX: Math.trunc(numeral(totalTagihanWithTax).value()),
+    BULAN_TRANSAKSI: latestBulanTransaksi, // ✅ Include BULAN_TRANSAKSI
+    BULAN_MASUK_TAGIHAN: latestBulanMasukTagihan // ✅ Include BULAN_MASUK_TAGIHAN
+};
+
+// ✅ JSON Response (Unified format)
+return res.json({
+    message: `✅ Successfully generated ${reportType} report`,
+    column_headers: updatedHeaders,
+    detailed_records: detailedRecords, // Now formatted as an array of objects
+    aggregated_by_driver: aggregatedByDriver,
+    overall_totals: overallTotals,
+    record_count: detailedRecords.length
+})
 
     } catch (error) {
         console.error(`❌ Error generating ${reportType} report:`, error);

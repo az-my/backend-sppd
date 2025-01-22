@@ -9,6 +9,7 @@
     "googleapis": "^144.0.0",
     "json2csv": "^6.0.0-alpha.2",
     "nanoid": "^5.0.9",
+    "numeral": "^2.0.6",
     "uuid": "^11.0.3",
     "winston": "^3.17.0"
   },
