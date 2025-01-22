@@ -178,7 +178,7 @@ const checkDayStatus = (date) => {
 export const updateJamMulaiOptions = () => {
     const tanggalMulai = document.getElementById("TANGGAL_MULAI").value;
     const jamMulaiSelect = document.getElementById("JAM_MULAI");
-    const isWeekendOrHoliday = checkDayStatus(tanggalMulai) !== "Weekday";
+    const isWeekendOrHoliday = checkDayStatus(tanggalMulai) !== "HK";
 
     // ✅ Set allowed range
     const minHour = isWeekendOrHoliday ? 0 : 17;
