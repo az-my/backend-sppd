@@ -40,8 +40,9 @@ export function renderTable(moduleName, endpoint, rawData) {
                 "NAMA_DRIVER",
                 "TANGGAL_MULAI",
                 "TANGGAL_SELESAI",
-                "KOTA_TUJUAN",
                 "JABATAN_PEMBERI_TUGAS",
+                "KOTA_TUJUAN",
+                
                 "TOTAL_BIAYA_BAYAR",
                 "DURASI_TRIP"
             ],
@@ -88,23 +89,70 @@ export function renderTable(moduleName, endpoint, rawData) {
     tableHead.innerHTML = "";
     tableBody.innerHTML = "";
 
-    // ✅ Render Table Headers with Conditional "S/D" Header for SPPD
-    tableHead.innerHTML = `
+// ✅ Define Header Mapping for Each Module
+const headerMappings = {
+    "sppd": {
+        "report/rekap-pln": {
+            "NAMA_DRIVER": "NAMA",
+            "JABATAN_PEMBERI_TUGAS": "PEJABAT PEMBERI TUGAS",
+            "KOTA_TUJUAN": "TUJUAN",
+            "TOTAL_BIAYA_BAYAR": "JUMLAH",
+            "DURASI_TRIP": "KET."
+        }
+    },
+    "lembur": {
+        "report/rekap-pln": {
+            "HARI_MULAI": "HARI",
+            "TANGGAL_MULAI": "TANGGAL",
+            "NAMA_DRIVER": "NAMA OUTSOURCING",
+            "UNIT_KERJA": "UNIT",
+            "URAIAN_PEKERJAAN": "RINCIAN PEKERJAAN",
+            "TOTAL_JAM_BAYAR": "TOTAL JAM YANG DIBAYARKAN",
+            "UPAH_PER_JAM": "UPAH LEMBUR SEJAM",
+            "TOTAL_BIAYA_BAYAR": "BIAYA YANG DIBAYARKAN",
+            "STATUS_HARI_MULAI":"KET."
+        }
+    }
+};
+
+// ✅ Get Current Header Mapping Based on Active Module & Endpoint
+const activeHeaderMapping = headerMappings[moduleName]?.[endpoint] || {};
+
+// ✅ Check if "Tanggal SPPD" should be grouped (only for "rekap-pln" in SPPD)
+const hasTanggalSPPD = moduleName === "sppd" && endpoint === "report/rekap-pln";
+const filteredHeaders = expectedHeaders.filter(header => !["TANGGAL_MULAI", "TANGGAL_SELESAI"].includes(header.trim()));
+
+// ✅ Render Table Headers Dynamically with Renamed Headers
+tableHead.innerHTML = `
     <tr class="bg-primary text-white text-center">
-        <th class="px-2 py-1 border border-gray-800 text-xs break-all">No</th>
-        ${expectedHeaders.map((header, index) => `
-            ${moduleName === "sppd" && endpoint === "report/rekap-pln" && index === 2 ? `
-                <th class="px-4 py-2 border border-gray-800 text-xs break-all overflow-hidden w-auto"
-                    style="word-break: break-word; overflow-wrap: break-word;">
-                    
-                </th>
-            ` : ""}
-            <th class="px-4 py-2 border border-gray-800 text-xs break-all overflow-hidden w-auto"
-                style="word-break: break-word; overflow-wrap: break-word;">
-                ${header.replace(/_/g, ' ').toUpperCase()}
-            </th>
-        `).join("")}
+        <th class="px-2 py-1 border border-gray-800 text-xs break-all" rowspan="${hasTanggalSPPD ? 2 : 1}">No</th>
+        ${expectedHeaders.map(header => {
+            const cleanHeader = header.trim();
+            const displayHeader = activeHeaderMapping[cleanHeader] || cleanHeader.replace(/_/g, ' ').toUpperCase();
+
+            // ✅ Group "Tanggal SPPD" only for "rekap-pln" in SPPD
+            if (hasTanggalSPPD && cleanHeader === "TANGGAL_MULAI") {
+                return `<th class="px-4 py-2 border border-gray-800 text-xs break-all" colspan="3">Tanggal SPPD</th>`;
+            }
+
+            // ✅ Skip "TANGGAL_SELESAI" since it's inside "Tanggal SPPD"
+            if (hasTanggalSPPD && cleanHeader === "TANGGAL_SELESAI") {
+                return "";
+            }
+
+            return `<th class="px-4 py-2 border border-gray-800 text-xs break-all" rowspan="${hasTanggalSPPD ? 2 : 1}">
+                ${displayHeader}
+            </th>`;
+        }).join("")}
     </tr>
+
+    ${hasTanggalSPPD ? `
+    <tr class="bg-primary text-white text-center">
+        <th class="px-4 py-2 border border-gray-800 text-xs break-all">Mulai</th>
+        <th class="px-4 py-2 border border-gray-800 text-xs break-all">s/d</th>
+        <th class="px-4 py-2 border border-gray-800 text-xs break-all">Sampai</th>
+    </tr>
+    ` : ""}
 `;
 
 
@@ -115,99 +163,85 @@ export function renderTable(moduleName, endpoint, rawData) {
         console.log("📌 Expected Headers:", expectedHeaders);
     }
 
-    // // ✅ Render Table Rows (Matching Only Desired Headers)
-    // tableData.forEach((row, index) => {
-    //     console.log("🔍 Row Data:", row);  // Debugging each row
-    //     const tableRow = document.createElement("tr");
-    //     tableRow.classList.add("hover:bg-gray-100");
 
-    //     tableRow.innerHTML = `
-    //         <td class="text-center border border-gray-800">${index + 1}</td>
-    //         ${expectedHeaders.map(header => `
-    //             <td class="px-4 py-2 border border-gray-800 whitespace-normal border">
-    //                 ${row[header] || "-"} 
-    //             </td>
-    //         `).join("")}
-    //     `;
 
-    //     tableBody.appendChild(tableRow);
-    // });
-    // ✅ Render Table Rows (Matching Only Desired Headers)
-    tableData.forEach((row, index) => {
-        console.log("🔍 Row Data:", row);  // Debugging each row
-        const tableRow = document.createElement("tr");
-        tableRow.classList.add("hover:bg-gray-100");
 
-        tableRow.innerHTML = `
+
+// ✅ Render Table Rows (Matching Only Desired Headers)
+// ✅ Render Table Rows Dynamically
+tableData.forEach((row, index) => {
+    console.log("🔍 Row Data:", row); // Debugging each row
+    const tableRow = document.createElement("tr");
+    tableRow.classList.add("hover:bg-gray-100");
+
+    tableRow.innerHTML = `
         <td class="text-center border border-gray-800">${index + 1}</td>
         ${expectedHeaders.map((header, idx) => {
             let cellValue = row[header] || "-";
-            let extraClass = "text-center"; // ✅ Default text alignment is left
-            const cleanHeader = header.trim(); // ✅ Trim header to avoid hidden spaces
-    
+            let extraClass = "text-center"; // ✅ Default text alignment is centered
+            const cleanHeader = header.trim();
+
             console.log(`🛠 Current idx is ${idx}, Header: ${header}`); // ✅ Debugging Log
-    
+
             // ✅ Special Formatting for SPPD (rekap-pln) - Date Formatting
-            if (moduleName === "sppd" && endpoint === "report/rekap-pln") {
-                if (["TANGGAL_MULAI", "TANGGAL_SELESAI"].includes(cleanHeader)) {
-                    if (typeof cellValue === "string") {
-                        cellValue = cellValue.trim();
-                    }
-    
-                    const date = new Date(cellValue);
-                    if (!isNaN(date.getTime())) {
-                        cellValue = date.toLocaleDateString("id-ID", {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit"
-                        });
-                    }
+            if (["TANGGAL_MULAI", "TANGGAL_SELESAI"].includes(cleanHeader)) {
+                if (typeof cellValue === "string") {
+                    cellValue = cellValue.trim();
+                }
+
+                const date = new Date(cellValue);
+                if (!isNaN(date.getTime())) {
+                    cellValue = date.toLocaleDateString("id-ID", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit"
+                    });
                 }
             }
-    
-                // ✅ Apply Thousand Separator for TOTAL_BIAYA_BAYAR Variants
+
+            // ✅ Apply Thousand Separator for TOTAL_BIAYA_BAYAR
             if (["TOTAL_BIAYA_BAYAR", "TOTAL BIAYA BAYAR"].includes(cleanHeader)) {
                 if (!isNaN(cellValue) && cellValue !== "-") {
-                    cellValue = parseInt(cellValue, 10).toLocaleString("id-ID"); // Format as thousands separator
+                    cellValue = parseInt(cellValue, 10).toLocaleString("id-ID");
                 }
-                extraClass = "text-right"; // ✅ Apply text-right class ONLY for this column
+                extraClass = "text-right"; // ✅ Apply right alignment ONLY for this column
             }
 
-            let cellHtml = `
-                <td class="px-2 py-1 border border-gray-800 whitespace-normal ${extraClass}">
-                    ${cellValue}
-                </td>
-            `;
-    
-            // ✅ Insert "s/d" AFTER the second column (idx === 2) ONLY for module "sppd" and endpoint "rekap-pln"
-            if (moduleName === "sppd" && endpoint === "report/rekap-pln" && idx === 1) {
-                console.log(`🛠 Appending additional "s/d" column after idx 2`);
-                cellHtml += `
-                    <td class="px-2 py-1 border text-center border-gray-800 whitespace-normal">s/d</td>
+            // ✅ Render "Tanggal SPPD" as grouped columns (rekap-pln only)
+            if (hasTanggalSPPD && cleanHeader === "TANGGAL_MULAI") {
+                return `
+                    <td class="px-2 py-1 border border-gray-800 text-center">${cellValue}</td>
+                    <td class="px-2 py-1 border border-gray-800 text-center font-bold">s/d</td>
                 `;
             }
-    
-            return cellHtml;
+
+            // ✅ Skip "TANGGAL_SELESAI" since it's inside "Tanggal SPPD"
+            if (hasTanggalSPPD && cleanHeader === "TANGGAL_SELESAI") {
+                return `<td class="px-2 py-1 border border-gray-800 text-center">${cellValue}</td>`;
+            }
+
+            // ✅ Conditional Logic: Add "hari" suffix for DURASI_TRIP / KET. in SPPD (rekap-pln)
+            if (moduleName === "sppd" && endpoint === "report/rekap-pln" && ["DURASI_TRIP", "KET."].includes(cleanHeader)) {
+                cellValue = `${cellValue} hari`;
+            }
+
+            // ✅ Conditional Logic: Handle STATUS_HARI_MULAI / KET. in LEMBUR (rekap-pln)
+            if (moduleName === "lembur" && endpoint === "report/rekap-pln" && ["STATUS_HARI_MULAI", "KET."].includes(cleanHeader)) {
+                if (cellValue === "HK") {
+                    cellValue = ""; // ✅ If "HK", return empty
+                } else if (cellValue === "HL") {
+                    cellValue = "HL"; // ✅ If "HL", render as is
+                }
+            }
+
+            return `<td class="px-2 py-1 border border-gray-800 ${extraClass}">${cellValue}</td>`;
         }).join("")}
     `;
-    
-    
 
+    tableBody.appendChild(tableRow);
+});
 
-
-
-
-
-        tableBody.appendChild(tableRow);
-
-
-
-
-
-    });
-
-
-    console.log("✅ Table Rendered Successfully!");
+console.log("✅ Table Rendered Successfully!");
 }
 
 
