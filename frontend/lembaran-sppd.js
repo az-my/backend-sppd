@@ -85,8 +85,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 </td>
                                 <td class="p-2 w-1/2">
                                     <div>a. <span> ${row.DURASI_TRIP} Hari</span></div>
-                                    <div>b. <span>${moment(row.TANGGAL_MULAI).format('DD MMMM YYYY')}</span></div>
-                                    <div>c. <span>${moment(row.TANGGAL_SELESAI).format('DD MMMM YYYY')}</span></div>
+<div>b. <span>${moment(row.TANGGAL_MULAI).locale('id').format('DD MMMM YYYY')}</span></div>
+<div>c. <span>${moment(row.TANGGAL_SELESAI).locale('id').format('DD MMMM YYYY')}</span></div>
+
                                 </td>
                             </tr>
                             <tr class="border-b border-black">
@@ -98,7 +99,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 </td>
                                 <td class="p-2 w-1/2">
                                     <div>&nbsp;</div>
-                                    <div>Rp <span>${row.TOTAL_BIAYA_SPPD}</span></div>
+                                    <div>Rp <span>${!isNaN(row.TOTAL_BIAYA_BAYAR) ? parseInt(row.TOTAL_BIAYA_BAYAR, 10).toLocaleString("id-ID") : row.TOTAL_BIAYA_BAYAR}</span></div>
+
                                     <div>PT. PALMA NAFINDO PRATAMA</div>
                                 </td>
                             </tr>
@@ -229,8 +231,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             <!-- Total Amount Column (30%) -->
             <td class="text-right  w-[30%]">
-                <span class="block"> ${row.TOTAL_BIAYA_HARIAN} </span>
-                <span class="block"> ${row.TOTAL_BIAYA_PENGINAPAN} </span>
+<span class="block"> ${!isNaN(row.TOTAL_BIAYA_HARIAN) ? parseInt(row.TOTAL_BIAYA_HARIAN, 10).toLocaleString("id-ID") : row.TOTAL_BIAYA_HARIAN} </span>
+<span class="block"> ${!isNaN(row.TOTAL_BIAYA_PENGINAPAN) ? parseInt(row.TOTAL_BIAYA_PENGINAPAN, 10).toLocaleString("id-ID") : row.TOTAL_BIAYA_PENGINAPAN} </span>
+
             </td>
         </tr>
 
@@ -243,7 +246,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <tr class="border-b border-black">
                                 <td class="border-r border-black p-2"></td>
                                 <td class="text-center font-bold p-2">TOTAL</td>
-                                <td class="border-l border-black font-bold text-right p-2"> ${row.TOTAL_BIAYA_SPPD} </td>
+                                <td class="border-l border-black font-bold text-right p-2"> 
+    ${!isNaN(row.TOTAL_BIAYA_BAYAR) ? parseInt(row.TOTAL_BIAYA_BAYAR, 10).toLocaleString("id-ID") : row.TOTAL_BIAYA_BAYAR} 
+</td>
+
                             </tr>
                                                         <tr class="border-b border-black">
                                 <td class="border-r border-black p-2">8.</td>
@@ -256,7 +262,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="flex justify-end">
                     <div class="w-64 mt-6">
                         <div>Dikeluarkan di: Banda Aceh</div>
-                        <div>Pada Tanggal&nbsp;&nbsp;: <span>${moment(row.TANGGAL_MULAI).format('DD MMMM YYYY')}</span></div>
+                        <div>Pada Tanggal&nbsp;&nbsp;: <span>>${moment(row.TANGGAL_MULAI).locale('id').format('DD MMMM YYYY')}</span></div>
                         <div class="mt-4 text-center">
                             <div class="font-bold">DIREKTUR</div>
                             <div class="mt-16">RIZKY NAHARDI</div>
