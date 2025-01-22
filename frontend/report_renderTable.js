@@ -91,12 +91,12 @@ export function renderTable(moduleName, endpoint, rawData) {
     // ✅ Render Table Headers with Conditional "S/D" Header for SPPD
     tableHead.innerHTML = `
     <tr class="bg-primary text-white text-center">
-        <th class="px-4 py-2 border border-gray-800 text-xs break-all">No</th>
+        <th class="px-2 py-1 border border-gray-800 text-xs break-all">No</th>
         ${expectedHeaders.map((header, index) => `
-            ${moduleName === "sppd" && endpoint==="report/rekap-pln" && index === 2 ? `
+            ${moduleName === "sppd" && endpoint === "report/rekap-pln" && index === 2 ? `
                 <th class="px-4 py-2 border border-gray-800 text-xs break-all overflow-hidden w-auto"
                     style="word-break: break-word; overflow-wrap: break-word;">
-                    S/D
+                    
                 </th>
             ` : ""}
             <th class="px-4 py-2 border border-gray-800 text-xs break-all overflow-hidden w-auto"
@@ -139,36 +139,60 @@ export function renderTable(moduleName, endpoint, rawData) {
         tableRow.classList.add("hover:bg-gray-100");
 
         tableRow.innerHTML = `
-    <td class="text-center border border-gray-800">${index + 1}</td>
-    ${expectedHeaders.map((header, idx) => {
+        <td class="text-center border border-gray-800">${index + 1}</td>
+        ${expectedHeaders.map((header, idx) => {
             let cellValue = row[header] || "-";
-            let extraClass = ""; // Default class
-
-            // ✅ Insert "S/D" after the second column for the `sppd` module
-            if (moduleName === "sppd" && endpoint==="report/rekap-pln" && idx === 2) {
-                return `
-                <td class="px-2 py-1 border border-gray-800 text-center whitespace-normal">S/D</td>
-                <td class="px-2 py-1 border border-gray-800 whitespace-normal">${cellValue}</td>
-            `;
-            }
-
-            // ✅ Target only "TOTAL_BIAYA_BAYAR", whether with "_" or space
-            if (/^TOTAL[_\s]?BIAYA[_\s]?BAYAR$/i.test(header)) {
-                extraClass = "text-right"; // Align to the right
-
-                // ✅ Ensure it's a valid number before formatting
-                if (!isNaN(cellValue) && cellValue !== "-") {
-                    cellValue = new Intl.NumberFormat("id-ID").format(Number(cellValue)); // ✅ Format with thousand separator
+            let extraClass = "text-center"; // ✅ Default text alignment is left
+            const cleanHeader = header.trim(); // ✅ Trim header to avoid hidden spaces
+    
+            console.log(`🛠 Current idx is ${idx}, Header: ${header}`); // ✅ Debugging Log
+    
+            // ✅ Special Formatting for SPPD (rekap-pln) - Date Formatting
+            if (moduleName === "sppd" && endpoint === "report/rekap-pln") {
+                if (["TANGGAL_MULAI", "TANGGAL_SELESAI"].includes(cleanHeader)) {
+                    if (typeof cellValue === "string") {
+                        cellValue = cellValue.trim();
+                    }
+    
+                    const date = new Date(cellValue);
+                    if (!isNaN(date.getTime())) {
+                        cellValue = date.toLocaleDateString("id-ID", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit"
+                        });
+                    }
                 }
             }
+    
+                // ✅ Apply Thousand Separator for TOTAL_BIAYA_BAYAR Variants
+            if (["TOTAL_BIAYA_BAYAR", "TOTAL BIAYA BAYAR"].includes(cleanHeader)) {
+                if (!isNaN(cellValue) && cellValue !== "-") {
+                    cellValue = parseInt(cellValue, 10).toLocaleString("id-ID"); // Format as thousands separator
+                }
+                extraClass = "text-right"; // ✅ Apply text-right class ONLY for this column
+            }
 
-            return `
-            <td class="px-2 py-1 border border-gray-800 whitespace-normal ${extraClass}">
-                ${cellValue}
-            </td>
-        `;
+            let cellHtml = `
+                <td class="px-2 py-1 border border-gray-800 whitespace-normal ${extraClass}">
+                    ${cellValue}
+                </td>
+            `;
+    
+            // ✅ Insert "s/d" AFTER the second column (idx === 2) ONLY for module "sppd" and endpoint "rekap-pln"
+            if (moduleName === "sppd" && endpoint === "report/rekap-pln" && idx === 1) {
+                console.log(`🛠 Appending additional "s/d" column after idx 2`);
+                cellHtml += `
+                    <td class="px-2 py-1 border text-center border-gray-800 whitespace-normal">s/d</td>
+                `;
+            }
+    
+            return cellHtml;
         }).join("")}
-`;
+    `;
+    
+    
+
 
 
 
@@ -189,9 +213,6 @@ export function renderTable(moduleName, endpoint, rawData) {
 
 
 export function renderSummary(summary, endpoint, moduleName) {
-    console.log(`📊 Rendering Summary UNTUK: ${moduleName}, Endpoint: ${endpoint}`);
-
-    console.log("📊 Rendering Summary...", summary);
 
     if (!summary) {
         console.warn("⚠️ No summary data available!");
@@ -240,7 +261,7 @@ export function renderSummary(summary, endpoint, moduleName) {
 
     // ✅ Convert TOTAL_TAGIHAN_WITH_TAX to Terbilang (if available)
     // ✅ Log the endpoint being processed
-console.log(`🔍 Current Endpoint: ${endpoint}`);
+    // console.log(`🔍 Current Endpoint: ${endpoint}`);
     let totalTagihan;
     if (endpoint === "report/rekap-kantor") {
         totalTagihan = summary["TOTAL_BIAYA_BAYAR"];
