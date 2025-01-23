@@ -10,7 +10,7 @@ export function setupFormSubmission(form, apiEndpoint) {
 
     // ✅ Automatically determine API base URL (Dev vs. Prod)
     const isLocal = ["localhost", "127.0.0.1"].includes(window.location.hostname);
-    const baseApiUrl = isLocal ? "http://localhost:3000/api" : "https://your-production-api.com/api";
+    const baseApiUrl = isLocal ? "http://localhost:3000/api" : "https://backend-sppd-production.up.railway.app/api";
     const fullApiUrl = `${baseApiUrl}${apiEndpoint}`;
 
     console.log(`📌 Using API Endpoint: ${fullApiUrl}`);
