@@ -212,7 +212,16 @@ tableData.forEach((row, index) => {
                     });
                 }
             }
-
+                        // ✅ Apply Thousand Separator for TOTAL_BIAYA_BAYAR
+                        if (["UPAH_PER_JAM"].includes(cleanHeader)) {
+                            if (!isNaN(cellValue) && cellValue !== "-") {
+                                cellValue = parseFloat(cellValue).toLocaleString("id-ID", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                });
+                            }
+                            extraClass = "text-center"; // ✅ Apply right alignment ONLY for this column
+                        }
             // ✅ Apply Thousand Separator for TOTAL_BIAYA_BAYAR
             if (["TOTAL_BIAYA_BAYAR", "TOTAL BIAYA BAYAR"].includes(cleanHeader)) {
                 if (!isNaN(cellValue) && cellValue !== "-") {

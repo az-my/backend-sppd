@@ -54,7 +54,6 @@ export default async function fetchAndRenderTable(moduleName, tableSelector) {
     `;
     
 
-
         // ✅ Populate Table Rows
         tableBody.innerHTML = ""; 
         formattedData.forEach((item, index) => {
