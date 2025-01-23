@@ -33,142 +33,129 @@
     </div>
 
     <script>
-        const RAW_DATASET = [
-            { daya: 450, tarif: 40000 },
-            { daya: 900, tarif: 60000 },
-            { daya: 1300, tarif: 120000 },
-            { daya: 2200, tarif: 135000 },
-            { daya: 3500, tarif: 122500 },
-            { daya: 3900, tarif: 136500 },
-            { daya: 4400, tarif: 154000 },
-            { daya: 5500, tarif: 192500 },
-            { daya: 6600, tarif: 231000 },
-            { daya: 7700, tarif: 269500 },
-            { daya: 10600, tarif: 318000 },
-            { daya: 11000, tarif: 330000 },
-            { daya: 13200, tarif: 396000 },
-            { daya: 16500, tarif: 495000 },
-            { daya: 23000, tarif: 690000 },
-            { daya: 33000, tarif: 825000 },
-            { daya: 41500, tarif: 1037500 },
-            { daya: 53000, tarif: 1325000 },
-            { daya: 66000, tarif: 1650000 },
-            { daya: 82500, tarif: 1650000 },
-            { daya: 105000, tarif: 2100000 },
-            { daya: 131000, tarif: 2620000 },
-            { daya: 147000, tarif: 2940000 },
-            { daya: 164000, tarif: 3280000 },
-            { daya: 197000, tarif: 3940000 }
-        ];
+    const RAW_GABUNG_DATASET = [
+        { daya: 450, tarif_nidi: 45000, tarif_slo: 40000 },
+        { daya: 900, tarif_nidi: 90000, tarif_slo: 60000 },
+        { daya: 1300, tarif_nidi: 130000, tarif_slo: 120000 },
+        { daya: 2200, tarif_nidi: 220000, tarif_slo: 135000 },
+        { daya: 3500, tarif_nidi: 350000, tarif_slo: 122500 },
+        { daya: 4400, tarif_nidi: 440000, tarif_slo: 154000 },
+        { daya: 5500, tarif_nidi: 550000, tarif_slo: 192500 },
+        { daya: 6600, tarif_nidi: 660000, tarif_slo: 231000 },
+        { daya: 7700, tarif_nidi: 770000, tarif_slo: 269500 },
+        { daya: 10600, tarif_nidi: 1060000, tarif_slo: 318000 },
+        { daya: 11000, tarif_nidi: 1100000, tarif_slo: 330000 },
+        { daya: 13200, tarif_nidi: 1320000, tarif_slo: 396000 },
+        { daya: 16500, tarif_nidi: 1650000, tarif_slo: 495000 },
+        { daya: 23000, tarif_nidi: 1725000, tarif_slo: 690000 },
+        { daya: 33000, tarif_nidi: 2475000, tarif_slo: 825000 },
+        { daya: 41500, tarif_nidi: 3112500, tarif_slo: 1037500 },
+        { daya: 53000, tarif_nidi: 3975000, tarif_slo: 1325000 },
+        { daya: 66000, tarif_nidi: 4950000, tarif_slo: 1650000 },
+        { daya: 82500, tarif_nidi: 4950000, tarif_slo: 1650000 },
+        { daya: 105000, tarif_nidi: 6300000, tarif_slo: 2100000 },
+        { daya: 131000, tarif_nidi: 7860000, tarif_slo: 2620000 },
+        { daya: 147000, tarif_nidi: 8820000, tarif_slo: 2940000 },
+        { daya: 164000, tarif_nidi: 9840000, tarif_slo: 3280000 },
+        { daya: 197000, tarif_nidi: 11820000, tarif_slo: 3940000 }
+    ];
 
-        const TRANSFORMED_DATASET = RAW_DATASET.map((item, index) => {
-            let pnbp;
-            if (item.daya <= 900) {
-                pnbp = 1000;
-            } else if (item.daya <= 2200) {
-                pnbp = 1500;
-            } else if (item.daya <= 197000) {
-                pnbp = 2500;
-            } else {
-                pnbp = 5000;
-            }
-            const tax = Math.round((11 / 111) * item.tarif);
-            const admin = item.daya <= 1300 ? 2000 : 2000;
-            const totalDeposit = item.tarif + pnbp + admin;
-            return {
-                index: index + 1,
-                daya: item.daya,
-                tarif: item.tarif,
-                tax: tax,
-                pnbp: pnbp,
-                admin: admin,
-                totalDeposit: totalDeposit
-            };
-        });
+    const TRANSFORMED_DATASET = RAW_GABUNG_DATASET.map((item, index) => {
+        let pnbp_nidi, pnbp_slo;
+        if (item.daya <= 900) {
+            pnbp_nidi = 1000;
+            pnbp_slo = 1000;
+        } else if (item.daya <= 2200) {
+            pnbp_nidi = 1500;
+            pnbp_slo = 1500;
+        } else if (item.daya <= 197000) {
+            pnbp_nidi = 2500;
+            pnbp_slo = 2500;
+        } else {
+            pnbp_nidi = 5000;
+            pnbp_slo = 5000;
+        }
+        const tax_nidi = Math.round((11 / 111) * item.tarif_nidi);
+        const tax_slo = Math.round((11 / 111) * item.tarif_slo);
+        const admin = item.daya <= 1300 ? 2000 : 2000;
+        const total_Deposit = item.tarif_slo + pnbp_slo + admin;
+        return {
+            index: index + 1,
+            daya: item.daya,
+            tarif_nidi: item.tarif_nidi,
+            tax_nidi: tax_nidi,
+            pnbp_nidi: pnbp_nidi,
+            tarif_slo: item.tarif_slo,
+            tax_slo: tax_slo,
+            pnbp_slo: pnbp_slo,
+            admin: admin,
+            total_Deposit: total_Deposit
+        };
+    });
+    let isVertical = false;
 
-        let isVertical = false;
-
-        function renderTable(filteredData) {
-            const table = document.getElementById('tarifTable');
-            table.innerHTML = "";
-            if (isVertical) {
-                filteredData.forEach(item => {
+    function renderTable(filteredData) {
+        const table = document.getElementById('tarifTable');
+        table.innerHTML = "";
+        const headers = Object.keys(filteredData[0]);
+        if (isVertical) {
+            filteredData.forEach(item => {
+                headers.forEach(header => {
+                    let headerClass = '';
+                    if (header.includes('nidi')) {
+                        headerClass = 'bg-yellow-100 text-yellow-600';
+                    } else if (header.includes('slo')) {
+                        headerClass = 'bg-blue-100 text-blue-800';
+                    }
                     table.innerHTML += `
                         <tr class="border-b">
-                            <th class="px-4 py-3">#</th>
-                            <td class="px-4 py-3">${item.index}</td>
-                        </tr>
-                        <tr class="border-b">
-                            <th class="px-4 py-3">Daya</th>
-                            <td class="px-4 py-3">${item.daya}</td>
-                        </tr>
-                        <tr class="border-b">
-                            <th class="px-4 py-3">SLO 100%</th>
-                            <td class="px-4 py-3">${item.tarif.toLocaleString()}</td>
-                        </tr>
-                        <tr class="border-b">
-                            <th class="px-4 py-3">PPN 11%</th>
-                            <td class="px-4 py-3">${item.tax.toLocaleString()}</td>
-                        </tr>
-                        <tr class="border-b">
-                            <th class="px-4 py-3">PNBP</th>
-                            <td class="px-4 py-3">${item.pnbp.toLocaleString()}</td>
-                        </tr>
-                        <tr class="border-b">
-                            <th class="px-4 py-3">ADMIN</th>
-                            <td class="px-4 py-3">${item.admin.toLocaleString()}</td>
-                        </tr>
-                        <tr class="border-b">
-                            <th class="px-4 py-3">TOTAL DEPOSIT</th>
-                            <td class="px-4 py-3">${item.totalDeposit.toLocaleString()}</td>
+                            <th class="px-4 py-3 ${headerClass}">${header.replace(/_/g, ' ').toUpperCase()}</th>
+                            <td class="px-4 py-3">${item[header].toLocaleString()}</td>
                         </tr>
                     `;
                 });
-            } else {
-                table.innerHTML = `
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-300">
-                        <tr>
-                            <th scope="col" class="px-4 py-3 text-right">#</th>
-                            <th scope="col" class="px-4 py-3 text-right">Daya</th>
-                            <th scope="col" class="px-4 py-3 text-right">SLO 100%</th>
-                            <th scope="col" class="px-4 py-3 text-right">PPN 11%</th>
-                            <th scope="col" class="px-4 py-3 text-right">PNBP</th>
-                            <th scope="col" class="px-4 py-3 text-right">ADMIN</th>
-                            <th scope="col" class="px-4 py-3 text-right">TOTAL DEPOSIT</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
+            });
+        } else {
+            table.innerHTML = `
+                <thead class="text-xs text-gray-700 uppercase bg-gray-300">
+                    <tr>
+                        ${headers.map(header => {
+                            let headerClass = '';
+                            if (header.includes('nidi')) {
+                                headerClass = 'bg-yellow-100 text-yellow-600';
+                            } else if (header.includes('slo')) {
+                                headerClass = 'bg-blue-100 text-blue-800';
+                            }
+                            return `<th scope="col" class="px-4 py-3 text-right ${headerClass}">${header.replace(/_/g, ' ').toUpperCase()}</th>`;
+                        }).join('')}
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            `;
+            const tbody = table.querySelector('tbody');
+            filteredData.forEach(item => {
+                tbody.innerHTML += `
+                    <tr class="border-b">
+                        ${headers.map(header => `<td class="px-4 py-3 text-right">${item[header].toLocaleString()}</td>`).join('')}
+                    </tr>
                 `;
-                const tbody = table.querySelector('tbody');
-                filteredData.forEach(item => {
-                    tbody.innerHTML += `
-                        <tr class="border-b">
-                            <td class="px-4 py-3 text-right">${item.index}</td>
-                            <td class="px-4 py-3 text-right">${item.daya}</td>
-                            <td class="px-4 py-3 text-right">${item.tarif.toLocaleString()}</td>
-                            <td class="px-4 py-3 text-right">${item.tax.toLocaleString()}</td>
-                            <td class="px-4 py-3 text-right">${item.pnbp.toLocaleString()}</td>
-                            <td class="px-4 py-3 text-right">${item.admin.toLocaleString()}</td>
-                            <td class="px-4 py-3 text-right">${item.totalDeposit.toLocaleString()}</td>
-                        </tr>
-                    `;
-                });
-            }
+            });
         }
-
+        }
+    
         document.getElementById('searchInput').addEventListener('keyup', function () {
             const query = this.value.toLowerCase();
             const filteredData = TRANSFORMED_DATASET.filter(item => item.daya.toString().includes(query));
             renderTable(filteredData);
         });
-
+    
         document.getElementById('toggleView').addEventListener('click', function () {
             isVertical = !isVertical;
             renderTable(TRANSFORMED_DATASET);
         });
-
+    
         renderTable(TRANSFORMED_DATASET);
-    </script>
-
-</body>
-</html>
+        </script>
+    
+    </body>
+    </html>

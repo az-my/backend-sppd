@@ -10,7 +10,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const logger = require('./BACKEND_utils_logger');
-
+const path = require('path'); // 🔴 Fix: Import the 'path' module
 // ✅ Use Google Service Account from Railway Variables
 const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
     ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON)
@@ -23,6 +23,20 @@ app.use(cors());
 // ✅ Log successful environment loading
 logger.info('✅ Environment variables loaded and validated.');
 
+// ✅ Serve static files from the frontend directory
+app.use(express.static(path.join(__dirname, 'frontend')));
+
+// ✅ Fix Clean URLs Handling
+app.get('/:page', (req, res) => {
+    const filePath = path.join(__dirname, 'frontend', `${req.params.page}.html`);
+
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            logger.warn(`❌ Page Not Found: ${req.params.page}`);
+            res.sendFile(path.join(__dirname, 'frontend', '404.html'));
+        }
+    });
+});
 // ✅ Mounting Routes
 app.use('/api/lembur', require('./BACKEND_lembur_crud'));
 app.use('/api/sppd', require('./BACKEND_sppd_crud'));
