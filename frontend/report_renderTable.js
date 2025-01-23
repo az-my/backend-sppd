@@ -138,7 +138,7 @@ const filteredHeaders = expectedHeaders.filter(header => !["TANGGAL_MULAI", "TAN
 
 // ✅ Render Table Headers Dynamically with Renamed Headers
 tableHead.innerHTML = `
-    <tr class="bg-primary text-white text-center">
+    <tr class="bg-yellow-50 text-black text-center">
         <th class="px-2 py-1 border border-gray-800 text-xs break-all" rowspan="${hasTanggalSPPD ? 2 : 1}">No</th>
         ${expectedHeaders.map(header => {
             const cleanHeader = header.trim();
@@ -161,7 +161,7 @@ tableHead.innerHTML = `
     </tr>
 
     ${hasTanggalSPPD ? `
-    <tr class="bg-primary text-white text-center">
+    <tr class="bg-yellow-50 text-black text-center">
         <th class="px-4 py-2 border border-gray-800 text-xs break-all">Mulai</th>
         <th class="px-4 py-2 border border-gray-800 text-xs break-all">s/d</th>
         <th class="px-4 py-2 border border-gray-800 text-xs break-all">Sampai</th>

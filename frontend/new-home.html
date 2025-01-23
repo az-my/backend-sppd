@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oops, Gone!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen w-full bg-white flex items-center justify-center p-6">
+    <div class="max-w-2xl w-full space-y-6 text-center">
+        <div class="text-7xl md:text-8xl animate-bounce">🚀</div>
+
+        <div class="space-y-2">
+            <h1 class="text-5xl font-extrabold text-gray-900 uppercase">
+                Oops, Gone!
+            </h1>
+            <p class="text-lg sm:text-xl text-gray-600 italic">Moved. Go find us.</p>
+        </div>
+
+        <div class="relative max-w-sm mx-auto p-4 bg-white border border-gray-300 rounded-xl shadow-md">
+            <p class="text-md font-mono text-gray-800 break-all font-semibold" id="newDomain"></p>
+            <div class="absolute -top-2 -right-2">
+                <span class="px-3 py-1 text-sm font-medium bg-gray-200 text-gray-800 rounded-full">New Spot</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="https://az-my.github.io/backend-sppd/" id="takeMeThere" 
+               class="bg-gray-900 hover:bg-gray-700 text-white font-bold px-6 py-3 rounded-xl flex items-center justify-center shadow-md transform hover:scale-105 transition-all">
+                Fine, Take Me 🚀
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+            </a>
+
+            <a href="/" class="border border-gray-500 text-gray-900 font-semibold px-6 py-3 rounded-xl flex items-center justify-center shadow-md transform hover:scale-105 transition-all">
+                Nope, I’m Out
+            </a>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function () {
+            const newDomain = "https://az-my.github.io/backend-sppd/";
+            const takeMeThereButton = document.getElementById("takeMeThere");
+            const newDomainText = document.getElementById("newDomain");
+
+            if (takeMeThereButton && newDomainText) {
+                takeMeThereButton.href = newDomain;
+                newDomainText.textContent = newDomain;
+            }
+        };
+    </script>
+</body>
+</html>
