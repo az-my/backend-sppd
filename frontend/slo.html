@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarif SLO 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css">
+    <style>
+        .vertical-table th, .vertical-table td {
+            display: block;
+            text-align: left;
+        }
+        .vertical-table th {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-6">
+
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Adjustment Tarif SLO 2025</h2>
+
+        <div class="mb-6">
+            <input type="text" id="searchInput" placeholder="Cari Daya..." class="w-full p-3 border rounded-lg shadow-sm text-lg">
+        </div>
+
+        <button id="toggleView" class="mb-6 p-3 bg-blue-600 text-white rounded-lg text-lg">Toggle View</button>
+
+        <div class="overflow-x-auto">
+            <table id="tarifTable" class="w-full text-md text-left text-gray-700"></table>
+        </div>
+    </div>
+
+    <script>
+        const RAW_DATASET = [
+            { daya: 450, tarif: 40000 },
+            { daya: 900, tarif: 60000 },
+            { daya: 1300, tarif: 120000 },
+            { daya: 2200, tarif: 135000 },
+            { daya: 3500, tarif: 122500 },
+            { daya: 3900, tarif: 136500 },
+            { daya: 4400, tarif: 154000 },
+            { daya: 5500, tarif: 192500 },
+            { daya: 6600, tarif: 231000 },
+            { daya: 7700, tarif: 269500 },
+            { daya: 10600, tarif: 318000 },
+            { daya: 11000, tarif: 330000 },
+            { daya: 13200, tarif: 396000 },
+            { daya: 16500, tarif: 495000 },
+            { daya: 23000, tarif: 690000 },
+            { daya: 33000, tarif: 825000 },
+            { daya: 41500, tarif: 1037500 },
+            { daya: 53000, tarif: 1325000 },
+            { daya: 66000, tarif: 1650000 },
+            { daya: 82500, tarif: 1650000 },
+            { daya: 105000, tarif: 2100000 },
+            { daya: 131000, tarif: 2620000 },
+            { daya: 147000, tarif: 2940000 },
+            { daya: 164000, tarif: 3280000 },
+            { daya: 197000, tarif: 3940000 }
+        ];
+
+        const TRANSFORMED_DATASET = RAW_DATASET.map((item, index) => {
+            let pnbp;
+            if (item.daya <= 900) {
+                pnbp = 1000;
+            } else if (item.daya <= 2200) {
+                pnbp = 1500;
+            } else if (item.daya <= 197000) {
+                pnbp = 2500;
+            } else {
+                pnbp = 5000;
+            }
+            const tax = Math.round((11 / 111) * item.tarif);
+            const admin = item.daya <= 1300 ? 2000 : 2000;
+            const totalDeposit = item.tarif + pnbp + admin;
+            return {
+                index: index + 1,
+                daya: item.daya,
+                tarif: item.tarif,
+                tax: tax,
+                pnbp: pnbp,
+                admin: admin,
+                totalDeposit: totalDeposit
+            };
+        });
+
+        let isVertical = false;
+
+        function renderTable(filteredData) {
+            const table = document.getElementById('tarifTable');
+            table.innerHTML = "";
+            if (isVertical) {
+                filteredData.forEach(item => {
+                    table.innerHTML += `
+                        <tr class="border-b">
+                            <th class="px-4 py-3">#</th>
+                            <td class="px-4 py-3">${item.index}</td>
+                        </tr>
+                        <tr class="border-b">
+                            <th class="px-4 py-3">Daya</th>
+                            <td class="px-4 py-3">${item.daya}</td>
+                        </tr>
+                        <tr class="border-b">
+                            <th class="px-4 py-3">SLO 100%</th>
+                            <td class="px-4 py-3">${item.tarif.toLocaleString()}</td>
+                        </tr>
+                        <tr class="border-b">
+                            <th class="px-4 py-3">PPN 11%</th>
+                            <td class="px-4 py-3">${item.tax.toLocaleString()}</td>
+                        </tr>
+                        <tr class="border-b">
+                            <th class="px-4 py-3">PNBP</th>
+                            <td class="px-4 py-3">${item.pnbp.toLocaleString()}</td>
+                        </tr>
+                        <tr class="border-b">
+                            <th class="px-4 py-3">ADMIN</th>
+                            <td class="px-4 py-3">${item.admin.toLocaleString()}</td>
+                        </tr>
+                        <tr class="border-b">
+                            <th class="px-4 py-3">TOTAL DEPOSIT</th>
+                            <td class="px-4 py-3">${item.totalDeposit.toLocaleString()}</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                table.innerHTML = `
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-300">
+                        <tr>
+                            <th scope="col" class="px-4 py-3 text-right">#</th>
+                            <th scope="col" class="px-4 py-3 text-right">Daya</th>
+                            <th scope="col" class="px-4 py-3 text-right">SLO 100%</th>
+                            <th scope="col" class="px-4 py-3 text-right">PPN 11%</th>
+                            <th scope="col" class="px-4 py-3 text-right">PNBP</th>
+                            <th scope="col" class="px-4 py-3 text-right">ADMIN</th>
+                            <th scope="col" class="px-4 py-3 text-right">TOTAL DEPOSIT</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                `;
+                const tbody = table.querySelector('tbody');
+                filteredData.forEach(item => {
+                    tbody.innerHTML += `
+                        <tr class="border-b">
+                            <td class="px-4 py-3 text-right">${item.index}</td>
+                            <td class="px-4 py-3 text-right">${item.daya}</td>
+                            <td class="px-4 py-3 text-right">${item.tarif.toLocaleString()}</td>
+                            <td class="px-4 py-3 text-right">${item.tax.toLocaleString()}</td>
+                            <td class="px-4 py-3 text-right">${item.pnbp.toLocaleString()}</td>
+                            <td class="px-4 py-3 text-right">${item.admin.toLocaleString()}</td>
+                            <td class="px-4 py-3 text-right">${item.totalDeposit.toLocaleString()}</td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('keyup', function () {
+            const query = this.value.toLowerCase();
+            const filteredData = TRANSFORMED_DATASET.filter(item => item.daya.toString().includes(query));
+            renderTable(filteredData);
+        });
+
+        document.getElementById('toggleView').addEventListener('click', function () {
+            isVertical = !isVertical;
+            renderTable(TRANSFORMED_DATASET);
+        });
+
+        renderTable(TRANSFORMED_DATASET);
+    </script>
+
+</body>
+</html>
