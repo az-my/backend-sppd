@@ -3,87 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dash</title>
-
-    <!-- ✅ Load DaisyUI & Tailwind -->
+    <title>Portal DJP</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.0.0/dist/full.css" rel="stylesheet">
-
-    <!-- ✅ Favicon -->
-    <link rel="icon" href="favicon.svg" type="image/svg+xml">
-
-    <style>
-        /* 🔥 Modern Hover Animation */
-        .card {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.25);
-        }
-    </style>
 </head>
-<body class="min-h-screen flex items-center justify-center bg-gray-100">
+<body class="bg-white">
+    <div class="max-w-6xl mx-auto p-6">
+        
+        
+        <h2 class="text-xl font-semibold mt-8 text-gray-800">Perjalanan Dinas (SPPD)</h2>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-4" id="sppd"></div>
 
-    <div class="w-full max-w-6xl text-center">
-        <!-- ✅ Title -->
-        <h1 class="text-3xl font-bold mb-6 text-gray-900 flex items-center justify-center">
-            📌 Choose Your Module
-        </h1>
-
-        <!-- ✅ Card Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-
-            <!-- 🔷 SPPD CRUD -->
-            <a href="form-sppd.html" class="card bg-blue-900 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-blue-800">
-                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2"></path><path d="M21 16v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path><path d="M7 9a5 5 0 1110 0"></path></svg>
-                <h2 class="font-bold text-lg mt-3">SPPD Input</h2>
-            </a>
-
-            <!-- 🔷 SPPD Report PLN -->
-            <a href="report-sppd-pln.html" class="card bg-blue-800 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-blue-700">
-                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 10h11a1 1 0 011 1v3a1 1 0 01-1 1H3m6-5v8"></path><path d="M13 16V9a1 1 0 00-1-1H7m5 8h-2"></path></svg>
-                <h2 class="font-bold text-lg mt-3">SPPD Report PLN</h2>
-            </a>
-
-            <!-- 🔷 SPPD Report Kantor -->
-            <a href="report-sppd-kantor.html" class="card bg-blue-700 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-blue-600">
-                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 4h18v16H3z"></path><path d="M7 14h10M7 10h10"></path></svg>
-                <h2 class="font-bold text-lg mt-3">SPPD Report Kantor</h2>
-            </a>
-
-            <!-- 🔷 SPPD Lampiran -->
-            <a href="lembaran-sppd.html" class="card bg-blue-600 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-blue-500">
-                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 7v10M20 7v10"></path><path d="M8 3h8v18H8z"></path></svg>
-                <h2 class="font-bold text-lg mt-3">SPPD Lampiran</h2>
-            </a>
-
-            <!-- 🟢 Lembur CRUD -->
-            <a href="form-lembur.html" class="card bg-green-900 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-green-800">
-                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8v4l3 3"></path><path d="M12 2a10 10 0 1010 10"></path></svg>
-                <h2 class="font-bold text-lg mt-3">Lembur Input</h2>
-            </a>
-
-            <!-- 🟢 Lembur Report PLN -->
-            <a href="report-lembur-pln.html" class="card bg-green-800 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-green-700">
-                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 10h11a1 1 0 011 1v3a1 1 0 01-1 1H3m6-5v8"></path><path d="M13 16V9a1 1 0 00-1-1H7m5 8h-2"></path></svg>
-                <h2 class="font-bold text-lg mt-3">Lembur Report PLN</h2>
-            </a>
-
-            <!-- 🟢 Lembur Report Kantor -->
-            <a href="report-lembur-kantor.html" class="card bg-green-700 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-green-600">
-                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 4h18v16H3z"></path><path d="M7 14h10M7 10h10"></path></svg>
-                <h2 class="font-bold text-lg mt-3">Lembur Report Kantor</h2>
-            </a>
-
-            <!-- 🟢 Lembur Lampiran -->
-            <a href="lembaran-lembur-index.html" class="card bg-green-600 text-white shadow-lg p-6 flex flex-col items-center justify-center rounded-lg hover:bg-green-500">
-                <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 7v10M20 7v10"></path><path d="M8 3h8v18H8z"></path></svg>
-                <h2 class="font-bold text-lg mt-3">Lembur Lampiran</h2>
-            </a>
-
-        </div>
+        <h2 class="text-xl font-semibold mt-8 text-gray-800">Lembur (Overtime)</h2>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-4" id="lembur"></div>
     </div>
 
+    <script>
+        const sppd = [
+            { title: "Input SPPD", href: "form-sppd.html", color: "border-red-300 bg-red-50", icon: "📋" },
+            { title: "SPPD PLN", href: "report-sppd-pln.html", color: "border-yellow-300 bg-yellow-50", icon: "📄" },
+            { title: "SPPD Kantor", href: "report-sppd-kantor.html", color: "border-green-300 bg-green-50", icon: "🏢" },
+            { title: "Lampiran SPPD", href: "lembaran-sppd.html", color: "border-blue-300 bg-blue-50", icon: "📑" },
+        ];
+
+        const lembur = [
+            { title: "Input Lembur", href: "form-lembur.html", color: "border-red-300 bg-red-50", icon: "⏳" },
+            { title: "Lembur PLN", href: "report-lembur-pln.html", color: "border-yellow-300 bg-yellow-50", icon: "💰" },
+            { title: "Lembur Kantor", href: "report-lembur-kantor.html", color: "border-green-300 bg-green-50", icon: "🔲" },
+            { title: "Lampiran Lembur", href: "lembaran-lembur-index.html", color: "border-blue-300 bg-blue-50", icon: "👥" },
+        ];
+
+        function generateCards(data, containerId) {
+            const container = document.getElementById(containerId);
+            data.forEach((item, index) => {
+                const card = document.createElement('a');
+                card.href = item.href;
+                card.className = `block p-6 text-gray-800 text-center rounded-lg shadow-lg border-2 transition transform hover:scale-105 ${item.color}`;
+                card.innerHTML = `
+                    <div class='text-2xl font-bold text-opacity-50'>0${index + 1}</div>
+                    <div class='text-4xl mt-2'>${item.icon}</div>
+                    <h3 class='mt-2 font-semibold'>${item.title}</h3>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        generateCards(sppd, 'sppd');
+        generateCards(lembur, 'lembur');
+    </script>
 </body>
 </html>
