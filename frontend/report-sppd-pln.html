@@ -15,22 +15,30 @@ https://cdn.jsdelivr.net/npm/@develoka/angka-terbilang-js@1.4.2/index.min.js
 "></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/id.min.js"></script>
-
+<style>
+  
+</style>
 
 <!-- ✅ Main JS -->
 <script type="module" src="report_main.js"></script>
 </head>
 
-<body class="bg-white-100 flex flex-col justify-center items-center min-h-screen p-6" data-module="sppd" data-endpoint="report/rekap-pln">
+<body class="" data-module="sppd" data-endpoint="report/rekap-pln">
   
-    <div id="laporan-wrapper" class="overflow-x-auto">
-      <div class="font-semibold text-xs text-left">PT. PALMA NAFINDO PRATAMA</div>
-              <div class="font-semibold text-xs text-left">KOTA BANDA ACEH</div>
-              <div class="font-semibold text-sm text-center mt-1">
-                <br />PERINCIAN BIAYA DINAS PENGEMUDI PT. PALMA NAFINDO PRATAMA <br />
-                PT PLN (Persero) UNIT INDUK P3B SUMATERA UPT BANDA ACEH
-              </div>
-      <table id="laporan" class="w-auto text-xs align-middle break-words">
+    <div id="laporan-wrapper" class="flex flex-col justify-center items-center overflow-x-auto">
+      <div class="text-center mb-4">
+        <div class="text-left">
+          <div class="font-semibold text-xs">PT. PALMA NAFINDO PRATAMA</div>
+          <div class="font-semibold text-xs">KOTA BANDA ACEH</div>
+        </div>
+        <div class="text-center">
+          <div class="font-semibold text-sm mt-1">
+        <br />PERINCIAN BIAYA DINAS PENGEMUDI PT. PALMA NAFINDO PRATAMA <br />
+        PT PLN (Persero) UNIT INDUK P3B SUMATERA UPT BANDA ACEH
+          </div>
+        </div>
+      
+      <table id="laporan" class="w-auto mx-auto text-xs align-middle break-words">
         <!-- Table Title -->
         <thead>
           <tr>
@@ -134,7 +142,29 @@ https://cdn.jsdelivr.net/npm/@develoka/angka-terbilang-js@1.4.2/index.min.js
         </tfoot>
       </table>
     </div>
-    <!-- Table -->
+    </div>
+
+
+    <!-- Table
+    <div class="print:hidden">
+    <button>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+      </svg>
+      <span class="btm-nav-label">Home</span>
+    </button> -->
+    
+   
+  </div>
   
 
   <!-- <script src="sppd-report-pln.js"></script> -->
