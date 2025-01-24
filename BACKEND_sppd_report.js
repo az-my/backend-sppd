@@ -44,6 +44,7 @@ const generateReport = async (reportType, req, res) => {
         let totalTransactions = 0;
         let totalSPPD = 0;
         let totalDurationInap = 0;
+        let totalDurationTrip = 0;
 
         detailedRecords.forEach(row => {
             const parseLocalizedNumber = (str) => {
@@ -73,7 +74,7 @@ const generateReport = async (reportType, req, res) => {
         
             // ✅ Convert DURASI_INAP safely
             const durasiInap = parseFloat((row["DURASI_INAP"] || "0").replace(/\./g, '').replace(',', '.')) || 0;
-        
+            const durasiTrip = parseFloat((row["DURASI_TRIP"] || "0").replace(/\./g, '').replace(',', '.')) || 0;
             console.log(`Parsed TOTAL_BIAYA_BAYAR: ${row["TOTAL_BIAYA_BAYAR"]}`);
         
             // ✅ Initialize driver-based grouping
@@ -86,7 +87,8 @@ const generateReport = async (reportType, req, res) => {
                     TOTAL_BIAYA_HARIAN: 0,
                     BUDGET_BIAYA_HARIAN: 0,
                     BUDGET_HOTEL: 0,
-                    TOTAL_DURASI_INAP: 0
+                    TOTAL_DURASI_INAP: 0,
+                    TOTAL_DURASI_TRIP: 0
                 };
             }
         
@@ -98,18 +100,21 @@ const generateReport = async (reportType, req, res) => {
             groupedData[driver].BUDGET_BIAYA_HARIAN += row["BUDGET_BIAYA_HARIAN"];
             groupedData[driver].BUDGET_HOTEL += row["BUDGET_HOTEL"];
             groupedData[driver].TOTAL_DURASI_INAP += durasiInap;
+            groupedData[driver].TOTAL_DURASI_TRIP+= durasiTrip;
         
             // ✅ Accumulate for grand totals
             totalTransactions += 1;
             totalSPPD += row["TOTAL_BIAYA_BAYAR"];
             totalDurationInap += durasiInap;
+            totalDurationTrip += durasiTrip;
         });
         
         // ✅ Convert grouped data into an array format
         const aggregatedByDriver = Object.values(groupedData).map(group => ({
             ...group,
             TOTAL_BIAYA_BAYAR: Math.trunc(numeral(group.TOTAL_BIAYA_BAYAR).value()),
-            TOTAL_DURASI_INAP: group.TOTAL_DURASI_INAP.toFixed(2)
+            TOTAL_DURASI_INAP: group.TOTAL_DURASI_INAP.toFixed(2),
+            TOTAL_DURASI_TRIP: group.TOTAL_DURASI_TRIP.toFixed(2)
         }));
 
 // ✅ Calculate Admin Fee, Total Tagihan with Admin, Tax, and Final Total
@@ -129,6 +134,7 @@ const overallTotals = {
     // TOTAL_BIAYA_BAYAR: totalSPPD.toLocaleString('id-ID', { minimumFractionDigits: 0 }),
      TOTAL_BIAYA_BAYAR: Math.trunc(numeral(totalSPPD).value()),
     TOTAL_DURASI_INAP: totalDurationInap.toFixed(2),
+    TOTAL_DURASI_TRIP: totalDurationTrip.toFixed(2),
     ADMIN_FEE: Math.trunc(numeral(adminFee).value()),
     TOTAL_TAGIHAN_WITH_ADMIN: Math.trunc(numeral(totalTagihanWithAdmin).value()),
     TAX: Math.trunc(numeral(tax).value()),

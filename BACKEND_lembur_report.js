@@ -122,7 +122,7 @@ detailedRecords.forEach(row => {
 
     const biayaLembur = row["TOTAL_BIAYA_BAYAR"]; // Keep as original format
 
-    const durasiLembur = 0; // Adjust if needed
+    const durasiLembur = row["TOTAL_JAM_LEMBUR"]; // Adjust if needed
 
     if (!groupedData[driver]) {
         groupedData[driver] = {

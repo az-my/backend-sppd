@@ -32,7 +32,9 @@ export function renderTable(moduleName, endpoint, rawData) {
             "report/rekap-kantor": [
                 "NAMA_DRIVER",
                 "JUMLAH_TRANSAKSI",
+                 "TOTAL_DURASI_LEMBUR",
                 "TOTAL_BIAYA_BAYAR",
+               
             ]
         },
         sppd: {
@@ -42,14 +44,15 @@ export function renderTable(moduleName, endpoint, rawData) {
                 "TANGGAL_SELESAI",
                 "JABATAN_PEMBERI_TUGAS",
                 "KOTA_TUJUAN",
-                
+
                 "TOTAL_BIAYA_BAYAR",
                 "DURASI_TRIP"
             ],
             "report/rekap-kantor": [
                 "NAMA_DRIVER",
                 "JUMLAH_TRANSAKSI",
-                "TOTAL_BIAYA_BAYAR"
+                "TOTAL_DURASI_TRIP",
+                "TOTAL_BIAYA_BAYAR",
             ]
         }
     };
@@ -89,75 +92,75 @@ export function renderTable(moduleName, endpoint, rawData) {
     tableHead.innerHTML = "";
     tableBody.innerHTML = "";
 
-// ✅ Define Header Mapping for Each Module
-const headerMappings = {
-    "sppd": {
-        "report/rekap-pln": {
-            "NAMA_DRIVER": "NAMA",
-            "JABATAN_PEMBERI_TUGAS": "PEJABAT PEMBERI TUGAS",
-            "KOTA_TUJUAN": "TUJUAN",
-            "TOTAL_BIAYA_BAYAR": "JUMLAH",
-            "DURASI_TRIP": "KET."
+    // ✅ Define Header Mapping for Each Module
+    const headerMappings = {
+        "sppd": {
+            "report/rekap-pln": {
+                "NAMA_DRIVER": "NAMA",
+                "JABATAN_PEMBERI_TUGAS": "PEJABAT PEMBERI TUGAS",
+                "KOTA_TUJUAN": "TUJUAN",
+                "TOTAL_BIAYA_BAYAR": "JUMLAH",
+                "DURASI_TRIP": "KET."
+            },
+            "report/rekap-kantor": {
+                "NAMA_DRIVER": "NAMA DRIVER",
+                "JUMLAH_TRANSAKSI": "JUMLAH SPPD",
+                "TOTAL_BIAYA_BAYAR": "JUMLAH BIAYA SPPD",
+                "TOTAL_DURASI_TRIP": "JUMLAH DURASI (HARI)"
+            }
+
         },
-        "report/rekap-kantor": {
-            "NAMA_DRIVER": "NAMA DRIVER",
-            
-            "JUMLAH_TRANSAKSI": "JUMLAH SPPD",
-            "TOTAL_BIAYA_BAYAR": "JUMLAH BIAYA SPPD",
-            "DURASI_TRIP": "KET."
+        "lembur": {
+            "report/rekap-pln": {
+                "HARI_MULAI": "HARI",
+                "TANGGAL_MULAI": "TANGGAL",
+                "NAMA_DRIVER": "NAMA OUTSOURCING",
+                "UNIT_KERJA": "UNIT",
+                "URAIAN_PEKERJAAN": "RINCIAN PEKERJAAN",
+                "TOTAL_JAM_BAYAR": "TOTAL JAM YANG DIBAYARKAN",
+                "UPAH_PER_JAM": "UPAH LEMBUR SEJAM",
+                "TOTAL_BIAYA_BAYAR": "BIAYA YANG DIBAYARKAN",
+                "STATUS_HARI_MULAI": "KET."
+            },
+            "report/rekap-kantor": {
+
+                "NAMA_DRIVER": "NAMA DRIVER",
+                "TOTAL_BIAYA_BAYAR": "JUMLAH BIAYA LEMBUR",
+                "JUMLAH_TRANSAKSI": "JUMLAH LEMBUR",
+                "TOTAL_DURASI_LEMBUR": "JUMLAH DURASI (JAM)"
+            }
         }
+    };
 
-    },
-    "lembur": {
-        "report/rekap-pln": {
-            "HARI_MULAI": "HARI",
-            "TANGGAL_MULAI": "TANGGAL",
-            "NAMA_DRIVER": "NAMA OUTSOURCING",
-            "UNIT_KERJA": "UNIT",
-            "URAIAN_PEKERJAAN": "RINCIAN PEKERJAAN",
-            "TOTAL_JAM_BAYAR": "TOTAL JAM YANG DIBAYARKAN",
-            "UPAH_PER_JAM": "UPAH LEMBUR SEJAM",
-            "TOTAL_BIAYA_BAYAR": "BIAYA YANG DIBAYARKAN",
-            "STATUS_HARI_MULAI":"KET."
-        },
-        "report/rekap-kantor": {
+    // ✅ Get Current Header Mapping Based on Active Module & Endpoint
+    const activeHeaderMapping = headerMappings[moduleName]?.[endpoint] || {};
 
-            "NAMA_DRIVER": "NAMA DRIVER",
-            "TOTAL_BIAYA_BAYAR": "JUMLAH BIAYA LEMBUR",
-            "JUMLAH_TRANSAKSI":"JUMLAH LEMBUR"
-        }
-    }
-};
+    // ✅ Check if "Tanggal SPPD" should be grouped (only for "rekap-pln" in SPPD)
+    const hasTanggalSPPD = moduleName === "sppd" && endpoint === "report/rekap-pln";
+    const filteredHeaders = expectedHeaders.filter(header => !["TANGGAL_MULAI", "TANGGAL_SELESAI"].includes(header.trim()));
 
-// ✅ Get Current Header Mapping Based on Active Module & Endpoint
-const activeHeaderMapping = headerMappings[moduleName]?.[endpoint] || {};
-
-// ✅ Check if "Tanggal SPPD" should be grouped (only for "rekap-pln" in SPPD)
-const hasTanggalSPPD = moduleName === "sppd" && endpoint === "report/rekap-pln";
-const filteredHeaders = expectedHeaders.filter(header => !["TANGGAL_MULAI", "TANGGAL_SELESAI"].includes(header.trim()));
-
-// ✅ Render Table Headers Dynamically with Renamed Headers
-tableHead.innerHTML = `
+    // ✅ Render Table Headers Dynamically with Renamed Headers
+    tableHead.innerHTML = `
     <tr class="bg-yellow-50 text-black text-center">
         <th class="px-2 py-1 border border-gray-800 text-xs break-all" rowspan="${hasTanggalSPPD ? 2 : 1}">No</th>
         ${expectedHeaders.map(header => {
-            const cleanHeader = header.trim();
-            const displayHeader = activeHeaderMapping[cleanHeader] || cleanHeader.replace(/_/g, ' ').toUpperCase();
+        const cleanHeader = header.trim();
+        const displayHeader = activeHeaderMapping[cleanHeader] || cleanHeader.replace(/_/g, ' ').toUpperCase();
 
-            // ✅ Group "Tanggal SPPD" only for "rekap-pln" in SPPD
-            if (hasTanggalSPPD && cleanHeader === "TANGGAL_MULAI") {
-                return `<th class="px-4 py-2 border border-gray-800 text-xs break-all" colspan="3">Tanggal SPPD</th>`;
-            }
+        // ✅ Group "Tanggal SPPD" only for "rekap-pln" in SPPD
+        if (hasTanggalSPPD && cleanHeader === "TANGGAL_MULAI") {
+            return `<th class="px-4 py-2 border border-gray-800 text-xs break-all" colspan="3">Tanggal SPPD</th>`;
+        }
 
-            // ✅ Skip "TANGGAL_SELESAI" since it's inside "Tanggal SPPD"
-            if (hasTanggalSPPD && cleanHeader === "TANGGAL_SELESAI") {
-                return "";
-            }
+        // ✅ Skip "TANGGAL_SELESAI" since it's inside "Tanggal SPPD"
+        if (hasTanggalSPPD && cleanHeader === "TANGGAL_SELESAI") {
+            return "";
+        }
 
-            return `<th class="px-4 py-2 border border-gray-800 text-xs break-all" rowspan="${hasTanggalSPPD ? 2 : 1}">
+        return `<th class="px-4 py-2 border border-gray-800 text-xs break-all" rowspan="${hasTanggalSPPD ? 2 : 1}">
                 ${displayHeader}
             </th>`;
-        }).join("")}
+    }).join("")}
     </tr>
 
     ${hasTanggalSPPD ? `
@@ -181,14 +184,14 @@ tableHead.innerHTML = `
 
 
 
-// ✅ Render Table Rows (Matching Only Desired Headers)
-// ✅ Render Table Rows Dynamically
-tableData.forEach((row, index) => {
-    console.log("🔍 Row Data:", row); // Debugging each row
-    const tableRow = document.createElement("tr");
-    tableRow.classList.add("hover:bg-gray-100");
+    // ✅ Render Table Rows (Matching Only Desired Headers)
+    // ✅ Render Table Rows Dynamically
+    tableData.forEach((row, index) => {
+        console.log("🔍 Row Data:", row); // Debugging each row
+        const tableRow = document.createElement("tr");
+        tableRow.classList.add("hover:bg-gray-100");
 
-    tableRow.innerHTML = `
+        tableRow.innerHTML = `
         <td class="text-center border border-gray-800">${index + 1}</td>
         ${expectedHeaders.map((header, idx) => {
             let cellValue = row[header] || "-";
@@ -212,16 +215,16 @@ tableData.forEach((row, index) => {
                     });
                 }
             }
-                        // ✅ Apply Thousand Separator for TOTAL_BIAYA_BAYAR
-                        if (["UPAH_PER_JAM"].includes(cleanHeader)) {
-                            if (!isNaN(cellValue) && cellValue !== "-") {
-                                cellValue = parseFloat(cellValue).toLocaleString("id-ID", {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                });
-                            }
-                            extraClass = "text-center"; // ✅ Apply right alignment ONLY for this column
-                        }
+            // ✅ Apply Thousand Separator for TOTAL_BIAYA_BAYAR
+            if (["UPAH_PER_JAM"].includes(cleanHeader)) {
+                if (!isNaN(cellValue) && cellValue !== "-") {
+                    cellValue = parseFloat(cellValue).toLocaleString("id-ID", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                }
+                extraClass = "text-center"; // ✅ Apply right alignment ONLY for this column
+            }
             // ✅ Apply Thousand Separator for TOTAL_BIAYA_BAYAR
             if (["TOTAL_BIAYA_BAYAR", "TOTAL BIAYA BAYAR"].includes(cleanHeader)) {
                 if (!isNaN(cellValue) && cellValue !== "-") {
@@ -261,10 +264,10 @@ tableData.forEach((row, index) => {
         }).join("")}
     `;
 
-    tableBody.appendChild(tableRow);
-});
+        tableBody.appendChild(tableRow);
+    });
 
-console.log("✅ Table Rendered Successfully!");
+    console.log("✅ Table Rendered Successfully!");
 }
 
 
@@ -276,51 +279,51 @@ export function renderSummary(summary, endpoint, moduleName) {
         return;
     }
 
-  // ✅ Get today's date in Indonesian format (e.g., "25 Januari 2024")
-const todayDate = moment().locale("id").format("DD");
+    // ✅ Get today's date in Indonesian format (e.g., "25 Januari 2024")
+    const todayDate = moment().locale("id").format("DD");
 
-// ✅ Map API summary keys to their corresponding <td> IDs
-const summaryMapping = {
-    "TOTAL_BIAYA_BAYAR": "total-amount",
-    "ADMIN_FEE": "total-biaya-admin",
-    "TOTAL_TAGIHAN_WITH_ADMIN": "total-tagihan-without-tax",
-    "TOTAL_TAGIHAN_WITH_TAX": "total-final-invoice",
-    "TAX": "total-ppn",
-    "BULAN_TRANSAKSI": "transaction-month",
-    "BULAN_MASUK_TAGIHAN": "bulan-masuk-tagihan"
-};
+    // ✅ Map API summary keys to their corresponding <td> IDs
+    const summaryMapping = {
+        "TOTAL_BIAYA_BAYAR": "total-amount",
+        "ADMIN_FEE": "total-biaya-admin",
+        "TOTAL_TAGIHAN_WITH_ADMIN": "total-tagihan-without-tax",
+        "TOTAL_TAGIHAN_WITH_TAX": "total-final-invoice",
+        "TAX": "total-ppn",
+        "BULAN_TRANSAKSI": "transaction-month",
+        "BULAN_MASUK_TAGIHAN": "bulan-masuk-tagihan"
+    };
 
-// ✅ Fields that should have thousand separators
-const formattedFields = [
-    "TOTAL_BIAYA_BAYAR",
-    "ADMIN_FEE",
-    "TOTAL_TAGIHAN_WITH_ADMIN",
-    "TOTAL_TAGIHAN_WITH_TAX",
-    "TAX"
-];
+    // ✅ Fields that should have thousand separators
+    const formattedFields = [
+        "TOTAL_BIAYA_BAYAR",
+        "ADMIN_FEE",
+        "TOTAL_TAGIHAN_WITH_ADMIN",
+        "TOTAL_TAGIHAN_WITH_TAX",
+        "TAX"
+    ];
 
-// ✅ Loop through the mapping & update elements
-Object.entries(summaryMapping).forEach(([apiKey, tdId]) => {
-    const elements = document.querySelectorAll(`#${tdId}`);
+    // ✅ Loop through the mapping & update elements
+    Object.entries(summaryMapping).forEach(([apiKey, tdId]) => {
+        const elements = document.querySelectorAll(`#${tdId}`);
 
-    if (elements.length > 0) {
-        elements.forEach(el => {
-            let value = summary[apiKey] ?? "-"; // Use raw value if available
+        if (elements.length > 0) {
+            elements.forEach(el => {
+                let value = summary[apiKey] ?? "-"; // Use raw value if available
 
-            // ✅ Apply thousand separator for formatted fields
-            if (formattedFields.includes(apiKey) && !isNaN(value) && value !== "-") {
-                value = new Intl.NumberFormat("id-ID").format(Number(value));
-            }
+                // ✅ Apply thousand separator for formatted fields
+                if (formattedFields.includes(apiKey) && !isNaN(value) && value !== "-") {
+                    value = new Intl.NumberFormat("id-ID").format(Number(value));
+                }
 
-            // ✅ Add today's date prefix for "bulan-masuk-tagihan"
-            if (apiKey === "BULAN_MASUK_TAGIHAN" && value !== "-") {
-                value = `${todayDate} ${value}`; // Prefix today's day to the value
-            }
+                // ✅ Add today's date prefix for "bulan-masuk-tagihan"
+                if (apiKey === "BULAN_MASUK_TAGIHAN" && value !== "-") {
+                    value = `${todayDate} ${value}`; // Prefix today's day to the value
+                }
 
-            el.textContent = value; // Render the value
-        });
-    }
-});
+                el.textContent = value; // Render the value
+            });
+        }
+    });
 
 
     // ✅ Convert TOTAL_TAGIHAN_WITH_TAX to Terbilang (if available)
